@@ -81,6 +81,18 @@ tbody tr:first-child td{font-weight:700}
 .notice b{font-family:var(--display);font-weight:400;font-size:18px;color:var(--court);white-space:nowrap;line-height:1.4}
 .notice p{margin:0;font-size:14.5px}
 @media (max-width:520px){.notice{flex-direction:column;gap:4px}}
+.right{display:flex;flex-direction:column;gap:14px;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.toolbar span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.restart{background:var(--shuttle);border-color:var(--shuttle);color:#2a2100;font-weight:700;padding:9px 16px}
+.restart.armed,.link.armed{background:#c4452f;border-color:#c4452f;color:#fff}
+.restart:disabled{opacity:.45;cursor:default}
+.sumrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.sumrow .note{margin-top:10px}
+.link{border:none;background:none;color:var(--muted);font-size:12.5px;text-decoration:underline;padding:2px 4px}
+.contact{margin-top:28px;padding:14px 16px;border-top:1px dashed var(--line);display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;color:var(--muted);font-size:14px}
+.contact b{color:var(--fg);font-family:var(--display);font-weight:400;font-size:17px}
+.contact strong{color:var(--court)}
 .empty{color:var(--muted);text-align:center;padding:40px 10px;border:2px dashed var(--line);border-radius:10px}
 .flash{color:var(--court);font-weight:700;font-size:13px;min-height:1.2em}
 @media (prefers-reduced-motion:no-preference){.round{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
@@ -111,7 +123,7 @@ tbody tr:first-child td{font-weight:700}
         <button type="submit">추가</button>
       </form>
       <ul class="list" id="list"></ul>
-      <p class="note" id="summary"></p>
+      <div class="sumrow"><p class="note" id="summary"></p><button class="link" id="wipe">명단 전체 삭제</button></div>
 
       <div class="settings">
         <label for="courts">코트 수</label><input type="number" id="courts" min="1" max="12" value="3">
@@ -122,14 +134,23 @@ tbody tr:first-child td{font-weight:700}
       <div class="row" style="margin-top:14px">
         <button class="primary" id="gen">대진 생성</button>
         <button id="more">라운드 추가</button>
-        <button id="reset">새로 시작</button>
       </div>
       <p class="flash" id="flash" aria-live="polite"></p>
       <p class="note">실력 A~E는 같은 팀 두 사람 합계를 비슷하게 맞추는 데 쓰입니다. 라운드 중간에 온 사람을 체크하면 다음 라운드부터 들어갑니다.</p>
     </section>
 
-    <section class="rounds" id="rounds-out" aria-label="대진표"></section>
+    <div class="right">
+      <div class="toolbar">
+        <span id="tbInfo">오늘 경기</span>
+        <button class="restart" id="restart">↻ 오늘 경기 새로 시작</button>
+      </div>
+      <section class="rounds" id="rounds-out" aria-label="대진표"></section>
+    </div>
   </div>
+  <footer class="contact">
+    <b>바꾸고 싶은 점이 있나요?</b>
+    <span>불편한 점이나 추가했으면 하는 기능이 있으면 <strong>고기석</strong>에게 편하게 말씀해 주세요. 바로 반영해 보겠습니다.</span>
+  </footer>
 </div>
 
 <script>
@@ -208,6 +229,9 @@ function render(){
     <button class="x" data-del="${p.id}" aria-label="${p.name} 삭제">✕</button></li>`).join("");
   const on=st.players.filter(p=>p.on).length;
   $("summary").textContent=`전체 ${st.players.length}명 · 참석 ${on}명 · 코트당 4명`;
+  const tot=st.rounds.reduce((a,r)=>a+r.courts.length,0),fin=st.rounds.reduce((a,r)=>a+r.scores.filter(done).length,0);
+  $("tbInfo").textContent=st.rounds.length?`오늘 ${st.rounds.length}라운드 · 점수 입력 ${fin}/${tot}경기`:"아직 만든 경기가 없습니다";
+  $("restart").disabled=!st.rounds.length;
   const out=$("rounds-out");
   if(!st.rounds.length){out.innerHTML=`<div class="empty">아직 대진이 없습니다.<br>왼쪽에서 참석자를 확인하고 <b>대진 생성</b>을 누르세요.</div>`;return;}
   const ranked=st.players.filter(p=>(w[p.id]+l[p.id])>0)
@@ -235,8 +259,11 @@ $("list").addEventListener("change",e=>{const t=e.target;
 $("list").addEventListener("click",e=>{const id=e.target.dataset.del;if(!id)return;st.players=st.players.filter(p=>p.id!==id);save();render();});
 $("gen").onclick=()=>{st.rounds=[];addRounds(Math.max(1,+$("rounds").value||1));};
 $("more").onclick=()=>addRounds(1);
-let armed=false;$("reset").onclick=()=>{if(!armed){armed=true;$("reset").textContent="한 번 더 누르면 초기화";setTimeout(()=>{armed=false;$("reset").textContent="새로 시작";},3000);return;}
-  armed=false;$("reset").textContent="새로 시작";st={players:[],rounds:[],sample:false};save();render();flash("명단과 대진을 비웠습니다. 이름을 추가하세요.");};
+function confirmBtn(btn,label,armedLabel,action){let t;btn.onclick=()=>{
+  if(!btn.classList.contains("armed")){btn.classList.add("armed");btn.textContent=armedLabel;t=setTimeout(()=>{btn.classList.remove("armed");btn.textContent=label;},3500);return;}
+  clearTimeout(t);btn.classList.remove("armed");btn.textContent=label;action();};}
+confirmBtn($("restart"),"↻ 오늘 경기 새로 시작","한 번 더 누르면 경기·점수 초기화",()=>{st.rounds=[];save();render();flash("오늘 경기와 점수를 비웠습니다. 명단은 그대로예요.");});
+confirmBtn($("wipe"),"명단 전체 삭제","한 번 더 누르면 명단까지 삭제",()=>{st={players:[],rounds:[],sample:false};save();render();flash("명단과 경기를 모두 지웠습니다. 이름을 추가하세요.");});
 
 $("rounds-out").addEventListener("change",e=>{const t=e.target;if(!t.classList.contains("score"))return;
   const r=st.rounds[+t.dataset.r];if(!r)return;const v=t.value===""?null:Math.max(0,Math.min(99,parseInt(t.value,10)));
