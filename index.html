@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>고기석이 만든 배드민턴 대진표</title>
+<title>고기석의 배드민턴 대진표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -318,7 +318,7 @@ select.lose option{color:#1b2a24;background:#fff}
     <p>파트너가 실수해도 짜증내지 말고 "괜찮아, 다음 거!" 한마디 해주기. 승패보다 중요한 건 함께 웃는 시간입니다. 충분히 몸 풀고, 무리하지 말고, 오늘도 즐겁게 부상 없이 운동합시다!</p>
   </aside>
   <header>
-    <h1>고기석이 만든 <span>배드민턴 대진표</span></h1>
+    <h1>고기석의 <span>배드민턴 대진표</span></h1>
     <p class="sub" id="subTxt"></p>
     <div class="sess" id="sess" hidden><span class="pill" id="sessTxt"></span><button type="button" id="chg">🏠 처음 화면</button></div>
     <div class="tools">
@@ -739,7 +739,7 @@ function resultText(rounds,name,date,tgt,sub){
   lines.push("","[게임 결과]");
   rounds.forEach((r,ri)=>r.courts.forEach((c,ci)=>{const sc=r.scores[ci];if(!done(sc))return;
     lines.push(`${ri+1}게임 ${courtName(r,ci)}: ${c[0].map(name).join("·")} ${sc[0]}:${sc[1]} ${c[1].map(name).join("·")}`);}));
-  return lines.concat(["","고기석이 만든 배드민턴 대진표","https://gogiseok.github.io/badminton/"]).join("\n");}
+  return lines.concat(["","고기석의 배드민턴 대진표","https://gogiseok.github.io/badminton/"]).join("\n");}
 
 /* ---------- 팀 (파트너 고정 공통) ---------- */
 const tOf=tid=>st.lg.teams.find(t=>t.id===tid);
@@ -779,7 +779,7 @@ function leagueText(teams,matches,cn,name,date,tgt){
   rank.forEach((id,i)=>lines.push(`${i+1}. ${tn(id)} ${r[id].w}승 ${r[id].l}패 (득실 ${r[id].pd>0?"+":""}${r[id].pd})`));
   lines.push("","[경기 결과]");
   matches.forEach(m=>{if(done(m.sc))lines.push(`${m.slot+1}게임 ${lCourt(cn,m)}: ${tn(m.t[0])} ${m.sc[0]}:${m.sc[1]} ${tn(m.t[1])}`);});
-  return lines.concat(["","고기석이 만든 배드민턴 대진표","https://gogiseok.github.io/badminton/"]).join("\n");}
+  return lines.concat(["","고기석의 배드민턴 대진표","https://gogiseok.github.io/badminton/"]).join("\n");}
 
 /* ---------- 토너먼트 ---------- */
 function seedOrder(P){let a=[1];while(a.length<P){const n=a.length*2;a=a.flatMap(x=>[x,n+1-x]);}return a;}
@@ -812,7 +812,7 @@ function tourLines(tn,tnm){const cm=tourCourts(tn),pd=podium(tn),lines=[];
     if(done(m.sc))lines.push(`${roundName(tn,r)} ${tCourtLabel(tn,cm,r,i)}: ${tnm(m.t[0])} ${m.sc[0]}:${m.sc[1]} ${tnm(m.t[1])}`);}));
   return lines;}
 function tourText(tn,teams,name,date,tgt){const tnm=tid=>tName(teams.find(x=>x.id===tid),name);
-  return [`🏸 ${fmtDate(date)} 배드민턴 토너먼트 결과 (${tgt}점)`,`${teams.filter(t=>t.a&&t.b).length}팀 참가`,"",...tourLines(tn,tnm),"","고기석이 만든 배드민턴 대진표","https://gogiseok.github.io/badminton/"].join("\n");}
+  return [`🏸 ${fmtDate(date)} 배드민턴 토너먼트 결과 (${tgt}점)`,`${teams.filter(t=>t.a&&t.b).length}팀 참가`,"",...tourLines(tn,tnm),"","고기석의 배드민턴 대진표","https://gogiseok.github.io/badminton/"].join("\n");}
 
 /* ---------- 조별리그 ---------- */
 function planGroups(){
@@ -842,7 +842,7 @@ function groupText(gp,gk,teams,name,date,tgt){const tnm=tid=>tName(teams.find(x=
   if(gk)lines.push(...tourLines(gk,tnm),"");
   gp.groups.forEach((_,gi)=>{const {r,rank}=gpRec(gp,gi,teams);lines.push(`[${GL[gi]}조 순위]`);
     rank.forEach((id,i)=>lines.push(`${i+1}. ${tnm(id)} ${r[id].w}승 ${r[id].l}패 (득실 ${r[id].pd>0?"+":""}${r[id].pd})${i<gp.adv?" → 본선":""}`));lines.push("");});
-  return lines.concat(["고기석이 만든 배드민턴 대진표","https://gogiseok.github.io/badminton/"]).join("\n");}
+  return lines.concat(["고기석의 배드민턴 대진표","https://gogiseok.github.io/badminton/"]).join("\n");}
 
 /* ---------- 누적 개인 전적 ---------- */
 function gamesOf(kind,data,teams){const out=[];const mem=tid=>{const t=teams&&teams.find(x=>x.id===tid);return t?tMembers(t):[];};
@@ -1254,7 +1254,7 @@ async function restore(txt){let obj;try{obj=JSON.parse(txt.trim().replace(/^BDBA
 async function shareText(txt,okMsg){
   if(navigator.share){try{await navigator.share({text:txt});return;}catch(e){if(e&&e.name==="AbortError")return;}}
   copyText(txt,okMsg);}
-const FOOT=["","고기석이 만든 배드민턴 대진표","https://gogiseok.github.io/badminton/"];
+const FOOT=["","고기석의 배드민턴 대진표","https://gogiseok.github.io/badminton/"];
 function scheduleText(){const T=target(),f=fmt(),d=fmtDate(today());const L=[];
   const tl=t=>`${tIdx(t.id)}팀 ${tName(t)}`;
   if(isEvent())return evScheduleText();
