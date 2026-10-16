@@ -63,7 +63,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 .cnt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:76px;text-align:right}
 .x{border:none;background:none;color:var(--muted);padding:2px 6px}
 .listEmpty{color:var(--muted);font-size:13.5px;padding:14px 8px;text-align:center;border:1px dashed var(--line);border-radius:8px}
-.settings{display:grid;grid-template-columns:1fr auto;gap:8px 10px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.settings{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 10px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .settings label{color:var(--muted);font-size:14px}
 .cnums{grid-column:1/-1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
 .cnums.off{opacity:.7}
@@ -344,6 +344,12 @@ select.lose option{color:#1b2a24;background:#fff}
 .shotImg{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line);margin-top:12px}
 .btnA{display:inline-block;background:var(--court);color:var(--accentFg);border-radius:8px;padding:9px 16px;font-weight:700;text-decoration:none}
 .sthd [data-copy]{margin-left:auto}
+.settings>select,.settings>input[type=number]{width:100%;min-width:0;max-width:100%}
+#mode{grid-column:1/-1}
+.settings>*{min-width:0}
+.fxWrap{grid-column:1/-1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;min-width:0}
+.fxHd{font-size:13.5px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.fxHd b{color:var(--fg)}
 .fxBox{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .fxBox>button{font-size:13px;padding:5px 10px}
 .fxChip{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--shuttle);border-radius:999px;padding:2px 4px 2px 10px;font-size:13.5px;font-weight:700}
@@ -463,8 +469,7 @@ select.lose option{color:#1b2a24;background:#fff}
           <label for="mode">대진 짜는 기준</label>
           <select id="mode"><option value="rotate">파트너·상대 최대한 다르게</option><option value="level">비슷한 실력끼리 한 코트</option><option value="mixed">혼합복식 (남+여)</option></select>
           <p class="note modeNote" id="modeNote"></p>
-          <label>고정 짝<br><small style="font-size:12px">늘 한 팀</small></label>
-          <div class="fxBox" id="fxBox"></div>
+          <div class="fxWrap"><div class="fxHd"><b>🔗 고정 짝</b><span>늘 같은 팀으로 뛰는 두 사람</span></div><div class="fxBox" id="fxBox"></div></div>
         </div>
       </div>
       <div class="row" style="margin-top:14px" id="autoBtns">
