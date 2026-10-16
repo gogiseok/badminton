@@ -1,0 +1,16 @@
+{
+  "name": "기석 배드민턴 매치메이커",
+  "short_name": "기석 매치메이커",
+  "description": "배드민턴 복식 대진표 · 점수 · 순위 · 회비 장부",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eef2ef",
+  "theme_color": "#1f6b52",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

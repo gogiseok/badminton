@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#1f6b52">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>기석 매치메이커</title>
 <meta name="application-name" content="기석 매치메이커">
 <meta name="apple-mobile-web-app-title" content="기석 매치메이커">
@@ -310,6 +317,41 @@ select.lose option{color:#1b2a24;background:#fff}
 .sh-top button{white-space:nowrap;flex:none}
 .sh-top>div{min-width:0}
 .koBtn{width:100%;padding:12px;font-size:16px;margin-top:6px}
+.feeForm{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.feeForm .seg,.feeForm #fM,.feeForm #fAdd{grid-column:1/-1}
+.feeForm input{width:100%;min-width:0;padding:9px;font-size:15px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:9px;font-weight:700;background:var(--panel)}
+.seg button.on{background:var(--court);color:var(--accentFg)}
+.ftabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:4px 0 10px}
+.ftabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:8px 12px;font-weight:700;color:var(--muted)}
+.ftabs button.on{border-bottom-color:var(--shuttle);color:var(--fg)}
+.feeList{list-style:none;margin:0;padding:0}
+.feeList li{display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
+.feeList .fd{color:var(--muted);font-size:13px;min-width:38px}
+.feeList .fw{flex:1;min-width:0;font-weight:700}
+.feeList .fw em{display:block;font-style:normal;font-weight:400;color:var(--muted);font-size:12.5px}
+.fin{color:var(--win)} .fout{color:var(--lose)}
+.feeList b{white-space:nowrap}
+.fst{font-size:13px;white-space:nowrap}.fst.ok{color:var(--win);font-weight:700}.fst.part{color:var(--shuttle);font-weight:700}.fst.none{color:var(--lose)}
+.fpay{font-size:12.5px;padding:4px 9px}
+.feeSet{gap:10px;align-items:center;flex-wrap:wrap}
+.feeSet label{display:flex;align-items:center;gap:6px;font-size:14px}
+.feeSet input{width:110px;padding:6px}
+.instBtn{background:var(--court);border-color:var(--court);color:var(--accentFg);font-weight:700}
+.imgBtn{background:var(--panel);border-color:var(--shuttle);color:var(--fg)}
+.feeK .kpi b{font-size:17px;white-space:nowrap}
+.shotImg{display:block;width:100%;height:auto;border-radius:8px;border:1px solid var(--line);margin-top:12px}
+.btnA{display:inline-block;background:var(--court);color:var(--accentFg);border-radius:8px;padding:9px 16px;font-weight:700;text-decoration:none}
+.sthd [data-copy]{margin-left:auto}
+.fxBox{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fxBox>button{font-size:13px;padding:5px 10px}
+.fxChip{display:inline-flex;align-items:center;gap:4px;background:var(--bg);border:1px solid var(--shuttle);border-radius:999px;padding:2px 4px 2px 10px;font-size:13.5px;font-weight:700}
+.fxChip .x{padding:0 6px;min-width:0}
+.fxMark{margin-right:3px}
+.fxTag{font-style:normal;font-size:12px;margin-right:3px}
+.fxForm{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:14px 0 4px}
+.fxForm select{width:100%;padding:8px;font-size:15px}
 </style>
 </head>
 <body>
@@ -328,6 +370,8 @@ select.lose option{color:#1b2a24;background:#fff}
       <button type="button" id="fsBtn">가 글씨 크게</button>
       <button type="button" id="lvBtn">실력 보기</button>
       <button type="button" id="bkBtn">백업·불러오기</button>
+      <button type="button" id="feeBtn">💰 회비 장부</button>
+      <button type="button" id="instBtn" class="instBtn">📲 홈 화면에 추가</button>
     </div>
   </header>
 
@@ -419,6 +463,8 @@ select.lose option{color:#1b2a24;background:#fff}
           <label for="mode">대진 짜는 기준</label>
           <select id="mode"><option value="rotate">파트너·상대 최대한 다르게</option><option value="level">비슷한 실력끼리 한 코트</option><option value="mixed">혼합복식 (남+여)</option></select>
           <p class="note modeNote" id="modeNote"></p>
+          <label>고정 짝<br><small style="font-size:12px">늘 한 팀</small></label>
+          <div class="fxBox" id="fxBox"></div>
         </div>
       </div>
       <div class="row" style="margin-top:14px" id="autoBtns">
@@ -462,7 +508,7 @@ select.lose option{color:#1b2a24;background:#fff}
     <div class="right">
       <div class="toolbar">
         <span id="tbInfo">오늘 경기</span>
-        <span class="tbBtns"><button type="button" class="shareBtn" id="shareBtn" hidden>📤 대진표 공유</button><button class="restart" id="restart">↻ 오늘 게임 새로 시작</button></span>
+        <span class="tbBtns"><button type="button" class="shareBtn" id="shareBtn" hidden>📤 대진표 공유</button><button type="button" class="shareBtn imgBtn" id="imgBtn" hidden>🖼 이미지</button><button class="restart" id="restart">↻ 오늘 게임 새로 시작</button></span>
       </div>
       <section class="rounds" id="rounds-out" aria-label="대진표"></section>
       <section class="rounds" id="league-out" aria-label="대회 대진표" hidden></section>
@@ -494,7 +540,7 @@ const LV={5:"S",4:"A",3:"B",2:"C",1:"D"};
 const KEY="bd-draw-v3",GL="ABCD";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const blank=()=>({players:[],rounds:[],cfg:{courts:2,nums:[1,2]},session:null,lg:{teams:[],matches:[],cn:null,day:null},tn:null,gp:null,gk:null,history:[],ui:{fs:0,lv:true}});
+const blank=()=>({players:[],rounds:[],cfg:{courts:2,nums:[1,2]},session:null,lg:{teams:[],matches:[],cn:null,day:null},tn:null,gp:null,gk:null,history:[],ui:{fs:0,lv:true},fx:[],fee:{items:[],monthly:0}});
 let st=blank(),bootMsg="",startOpen=false,undoStack=[],lastSaved="";
 const openFolds=new Set();
 
@@ -548,6 +594,8 @@ function normalize(){
   if(!st.lg.teams)st.lg.teams=[];if(!st.lg.matches)st.lg.matches=[];
   if(st.tn&&!(st.tn.rounds&&st.tn.rounds.length))st.tn=null;
   if(!st.ui)st.ui={fs:0};if(st.ui.lv===undefined)st.ui.lv=true;
+  const ids=new Set(st.players.map(p=>p.id));st.fx=(st.fx||[]).filter(x=>x&&ids.has(x[0])&&ids.has(x[1])&&x[0]!==x[1]);
+  if(!st.fee||!Array.isArray(st.fee.items))st.fee={items:[],monthly:0};
   reconnectPool();}
 function save(){syncPool();const s=JSON.stringify(st);if(s===lastSaved)return;if(lastSaved){undoStack.push(lastSaved);if(undoStack.length>30)undoStack.shift();}
   lastSaved=s;try{localStorage.setItem(KEY,s);}catch(e){}$("undoBtn").disabled=!undoStack.length;}
@@ -625,63 +673,109 @@ const W={rotate:{d:1,p:10,o:3},level:{d:1,p:4,o:1.5},mixed:{d:1,p:10,o:3}};
 function bestSplit(q,pt,op,mixed,mode){const w=W[mode]||W.rotate;
   const opts=mixed?[[[q[0],q[2]],[q[1],q[3]]],[[q[0],q[3]],[q[1],q[2]]]]:[[[q[0],q[3]],[q[1],q[2]]],[[q[0],q[2]],[q[1],q[3]]],[[q[0],q[1]],[q[2],q[3]]]];
   let best=null,bc=1e9;
-  opts.forEach(o=>{const d=Math.abs(lvOf(o[0][0])+lvOf(o[0][1])-lvOf(o[1][0])-lvOf(o[1][1]));
+  const keep=o=>o.every(t=>t.every(id=>{const m=FX[id];return !m||!q.includes(m)||t.includes(m);}));
+  const ok=opts.filter(keep);(ok.length?ok:opts).forEach(o=>{const d=Math.abs(lvOf(o[0][0])+lvOf(o[0][1])-lvOf(o[1][0])-lvOf(o[1][1]));
     const rp=(pt[pk(o[0][0],o[0][1])]||0)+(pt[pk(o[1][0],o[1][1])]||0);let ro=0;o[0].forEach(a=>o[1].forEach(b=>ro+=op[pk(a,b)]||0));
     const c=d*w.d+rp*w.p+ro*w.o+Math.random()*.2;if(c<bc){bc=c;best=o;}});
   return {o:best,cost:bc};}
 function courtCost(q,pt,op,mode,avg){const b=bestSplit(q,pt,op,mode==="mixed",mode);const ls=q.map(lvOf);
   const extra=mode==="level"?(Math.max(...ls)-Math.min(...ls))*1.2:mode==="mixed"?(Math.max(...ls)-Math.min(...ls))*.3:0;
   return {o:b.o,cost:b.cost+extra};}
-function makeRound(){
+/* 고정 짝: st.fx=[[id,id],...] — 참석 중인 두 사람이 모두 있을 때만 적용 */
+let FX={};
+const fxPartner=id=>{const q=(st.fx||[]).find(x=>x.includes(id));return q?(q[0]===id?q[1]:q[0]):null;};
+function fxMap(act,mode){const on=new Set(act.map(p=>p.id));const m={};
+  (st.fx||[]).forEach(([a,b])=>{if(!on.has(a)||!on.has(b))return;
+    if(mode==="mixed"){const A=pOf(a),B=pOf(b);if(!A.g||!B.g||A.g===B.g)return;}m[a]=b;m[b]=a;});return m;}
+function toUnits(order){const seen=new Set(),U=[];order.forEach(p=>{const id=p.id||p;if(seen.has(id))return;seen.add(id);const m=FX[id];if(m){seen.add(m);U.push([id,m]);}else U.push([id]);});return U;}
+function pickUnits(units,slots){const S=units.filter(u=>u.length===1).length,P=units.length-S;
+  const can=(r,s,p)=>{for(let q=0;q<=p&&2*q<=r;q++)if(r-2*q<=s)return true;return false;};
+  let T=Math.floor(slots/4)*4;while(T>=4&&!can(T,S,P))T-=4;if(T<4)return null;
+  let rs=S,rp=P,need=T;const pick=[];
+  units.forEach(u=>{if(u.length===1)rs--;else rp--;if(u.length<=need&&can(need-u.length,rs,rp)){pick.push(u);need-=u.length;}});
+  return pick;}
+function pickMixed(units,n){const sx=u=>pOf(u[0]).g;const Sm=units.filter(u=>u.length===1&&sx(u)==="m").length,Sf=units.filter(u=>u.length===1&&sx(u)==="f").length,P=units.filter(u=>u.length===2).length;
+  const k=Math.min(n,Math.floor((P+Sm)/2),Math.floor((P+Sf)/2));if(k<1)return null;
+  const can=(nm,nf,rm,rf,rp)=>{const lo=Math.max(nm-rm,nf-rf,0),hi=Math.min(rp,nm,nf);return lo<=hi;};
+  let nm=2*k,nf=2*k,rm=Sm,rf=Sf,rp=P;const pick=[];
+  units.forEach(u=>{let dm=0,df=0;if(u.length===2){rp--;dm=1;df=1;}else{const g=sx(u);if(g==="m"){rm--;dm=1;}else if(g==="f"){rf--;df=1;}else return;}
+    if(dm<=nm&&df<=nf&&can(nm-dm,nf-df,rm,rf,rp)){pick.push(u);nm-=dm;nf-=df;}});
+  return {pick,k};}
+// 동점 순서를 여러 번 바꿔 짜 보고 파트너·상대 반복이 가장 적은 배치를 고름
+function makeRound(){let best=null;for(let t=0;t<(st.cfg.courts>3?12:30);t++){const r=makeRound1(t%3===0);if(!r)return null;if(!best||r._c<best._c)best=r;}delete best._c;return best;}
+function makeRound1(tb){
   const {g}=stats();const {pt,op}=counts();const mode=curMode();const pc=grouped()?poolCourts(st.pool.cur):null;const n=pc?pc.length:st.cfg.courts;
-  const active=activeP();
+  const active=activeP();FX=fxMap(active,mode);
   const last=st.rounds[st.rounds.length-1];const restedLast=new Set(last?last.rest:[]);
   const streak={};active.forEach(p=>{let k=0;for(let i=st.rounds.length-1;i>=0;i--){if(st.rounds[i].courts.some(c=>c.flat().includes(p.id)))k++;else break;}streak[p.id]=k;});
   // 덜 뛴 사람 먼저(늦게 온 사람은 기준 게임 수 반영). 게임 수가 같을 때만 2게임 연속 뛴 사람을 뒤로
   const key=p=>(g[p.id]+(p.base||0))*2+(streak[p.id]>=2?1:0);
-  const order=shuffle(active.slice()).sort((a,b)=>(key(a)-key(b))||((restedLast.has(b.id)?1:0)-(restedLast.has(a.id)?1:0)));
-  let groups=[],rest=[];
+  const order=shuffle(active.slice()).sort((a,b)=>(key(a)-key(b))||(tb?((restedLast.has(b.id)?1:0)-(restedLast.has(a.id)?1:0)):0));
+  const units=toUnits(order);
+  let groups=[];
   if(mode==="mixed"){
-    const M=order.filter(p=>p.g==="m"),F=order.filter(p=>p.g==="f");const k=Math.min(n,Math.floor(M.length/2),Math.floor(F.length/2));
-    if(k<1)return null;const pm=M.slice(0,2*k).sort((a,b)=>b.lv-a.lv),pf=F.slice(0,2*k).sort((a,b)=>b.lv-a.lv);
-    const ids=new Set([...pm,...pf].map(p=>p.id));rest=order.filter(p=>!ids.has(p.id)).map(p=>p.id);
-    for(let j=0;j<k;j++)groups.push([pm[2*j].id,pm[2*j+1].id,pf[2*j].id,pf[2*j+1].id]);
+    const r=pickMixed(units,n);if(!r)return null;const k=r.k;groups=Array.from({length:k},()=>[null,null,null,null]);
+    const pairs=shuffle(r.pick.filter(u=>u.length===2)),singles=r.pick.filter(u=>u.length===1).map(u=>u[0]).sort((a,b)=>lvOf(b)-lvOf(a));
+    pairs.forEach((u,j)=>{const m=pOf(u[0]).g==="m"?u[0]:u[1],f=u[0]===m?u[1]:u[0];const gi=j%k,s2=j<k?0:1;groups[gi][s2]=m;groups[gi][2+s2]=f;});
+    const M=singles.filter(id=>pOf(id).g==="m"),F=singles.filter(id=>pOf(id).g==="f");
+    groups.forEach(q=>{for(let i=0;i<2;i++){if(q[i]==null)q[i]=M.shift();if(q[2+i]==null)q[2+i]=F.shift();}});
   }else{
     const slots=Math.min(n*4,Math.floor(active.length/4)*4);if(slots<4)return null;
-    let pick=order.slice(0,slots);rest=order.slice(slots).map(p=>p.id);
-    pick=shuffle(pick).sort((a,b)=>b.lv-a.lv);
-    if(mode==="level"){for(let i=0;i<pick.length;i+=4)groups.push(pick.slice(i,i+4).map(p=>p.id));}
-    else{const ids=shuffle(pick.map(p=>p.id));for(let i=0;i<ids.length;i+=4)groups.push(ids.slice(i,i+4));}
+    const pick=pickUnits(units,slots);if(!pick)return null;const k=pick.reduce((a,u)=>a+u.length,0)/4;groups=Array.from({length:k},()=>[]);
+    const pairs=shuffle(pick.filter(u=>u.length===2));let singles=pick.filter(u=>u.length===1).map(u=>u[0]);
+    singles=mode==="level"?shuffle(singles).sort((a,b)=>lvOf(b)-lvOf(a)):shuffle(singles);
+    if(mode==="level")pairs.sort((a,b)=>(lvOf(b[0])+lvOf(b[1]))-(lvOf(a[0])+lvOf(a[1])));
+    pairs.forEach((u,j)=>groups[j%k].push(...u));
+    groups.forEach(q=>{while(q.length<4)q.push(singles.shift());});
   }
-  // 같은 파트너·같은 상대 반복이 줄도록 코트 사이에서 사람을 바꿔 보며 더 나은 배치를 찾음 (혼합복식은 같은 성별끼리만 교환)
+  const used=new Set(groups.flat());const rest=order.map(p=>p.id).filter(id=>!used.has(id));
+  // 같은 파트너·같은 상대 반복이 줄도록 코트 사이에서 사람을 바꿔 보며 더 나은 배치를 찾음
+  // (혼합복식은 같은 성별끼리만, 고정 짝은 두 사람을 함께 옮김)
   const avg=groups.flat().reduce((a,id)=>a+lvOf(id),0)/groups.length;
   const cost=groups.map(q=>courtCost(q,pt,op,mode,avg).cost);
+  const half=i=>i<2?0:1;
+  const posU=(q,i)=>{const m=FX[q[i]];const j=m?q.indexOf(m):-1;return j>=0?[i,j]:[i];};
+  const ext=(q,P,ref)=>{const c=[0,1,2,3].filter(i=>i!==P[0]&&!FX[q[i]]&&(mode!=="mixed"||half(i)===half(ref[1])));return c.length?c[Math.floor(Math.random()*c.length)]:-1;};
   for(let it=0;it<800&&groups.length>1;it++){
     const a=Math.floor(Math.random()*groups.length);let b=Math.floor(Math.random()*(groups.length-1));if(b>=a)b++;
     let x=Math.floor(Math.random()*4),y=Math.floor(Math.random()*4);if(mode==="mixed")y=(x<2?0:2)+Math.floor(Math.random()*2);
-    [groups[a][x],groups[b][y]]=[groups[b][y],groups[a][x]];
-    const ca=courtCost(groups[a],pt,op,mode,avg).cost,cb=courtCost(groups[b],pt,op,mode,avg).cost;
-    if(ca+cb<cost[a]+cost[b]-0.01){cost[a]=ca;cost[b]=cb;}else{[groups[a][x],groups[b][y]]=[groups[b][y],groups[a][x]];}}
+    const ga=groups[a],gb=groups[b];let A=posU(ga,x),B=posU(gb,y);
+    if(A.length<B.length){const e=ext(ga,A,B);if(e<0)continue;A=[A[0],e];}
+    else if(B.length<A.length){const e=ext(gb,B,A);if(e<0)continue;B=[B[0],e];}
+    const sw=()=>A.forEach((ai,t)=>{const bi=B[t];[ga[ai],gb[bi]]=[gb[bi],ga[ai]];});
+    sw();
+    const ca=courtCost(ga,pt,op,mode,avg).cost,cb=courtCost(gb,pt,op,mode,avg).cost;
+    if(ca+cb<cost[a]+cost[b]-0.01){cost[a]=ca;cost[b]=cb;}else sw();}
   const courts=groups.map(q=>bestSplit(q,pt,op,mode==="mixed",mode).o);
-  return {courts,rest,scores:courts.map(()=>[null,null]),cn:pc?pc.slice(0,courts.length):n>1?st.cfg.nums.slice(0,courts.length):null};}
+  // 같은 게임 수끼리 고를 때 매번 같은 사람들끼리만 묶이지 않게 하되, 두 번 연달아 쉬는 사람은 적게
+  return {_c:cost.reduce((a,b)=>a+b,0)+rest.filter(id=>restedLast.has(id)).length*2,courts,rest,scores:courts.map(()=>[null,null]),cn:pc?pc.slice(0,courts.length):n>1?st.cfg.nums.slice(0,courts.length):null};}
 const curMode=()=>{const v=$("mode").value;return v==="mix"?"rotate":v;};
 const MODE_NOTE={rotate:"같은 사람과 다시 파트너가 되거나 맞붙는 일이 최대한 없게 짜요. 실력은 두 팀 합이 비슷하도록만 맞춰요.",
   level:"실력이 비슷한 사람끼리 한 코트에 모아요. 그 안에서 파트너·상대 반복은 최대한 피해요.",
   mixed:"한 팀을 남녀 1명씩으로 짜요. 참가자 이름 옆 성별 버튼으로 남·여를 정해 주세요."};
 function simulate(eff,s,G){const c=eff.map((v,i)=>({v,i,r:Math.random()}));for(let k=0;k<G;k++){c.sort((a,b)=>a.v-b.v||a.r-b.r);for(let j=0;j<s&&j<c.length;j++)c[j].v++;}const out=[];c.forEach(o=>out[o.i]=o.v);return out;}
+function simU(act,eff,F,s,G,mixed){const idx={};act.forEach((p,i)=>idx[p.id]=i);const seen=new Set(),U=[];
+  act.forEach(p=>{if(seen.has(p.id))return;seen.add(p.id);const m=F[p.id];const mem=m?[p,pOf(m)]:[p];if(m)seen.add(m);
+    U.push({mem,b:Math.min(...mem.map(eff)),inc:0,r:Math.random(),m:mem.filter(x=>x.g==="m").length,f:mem.filter(x=>x.g==="f").length});});
+  for(let k=0;k<G;k++){U.sort((a,b)=>(a.b+a.inc)-(b.b+b.inc)||a.r-b.r);let c=0,cm=0,cf=0;
+    if(mixed){const ok=U.filter(u=>u.m+u.f===u.mem.length);const r=pickMixed(ok.map(u=>u.mem.map(p=>p.id)),s/4);if(r){const ids=new Set(r.pick.flat());ok.forEach(u=>{if(ids.has(u.mem[0].id))u.inc++;});}}
+    else{const pk2=pickUnits(U.map(u=>u.mem.map(p=>p.id)),s);if(pk2){const ids=new Set(pk2.flat());U.forEach(u=>{if(ids.has(u.mem[0].id))u.inc++;});}}}
+  const out=[];U.forEach(u=>u.mem.forEach(p=>out[idx[p.id]]=eff(p)+u.inc));return out;}
 const courtCount=()=>grouped()?poolCourts(st.pool.cur).length:st.cfg.courts;
 function slotsPerGame(act){const n=courtCount();if(curMode()==="mixed"){const m=act.filter(p=>p.g==="m").length,f=act.filter(p=>p.g==="f").length;return 4*Math.min(n,Math.floor(m/2),Math.floor(f/2));}
   return Math.min(n*4,Math.floor(act.length/4)*4);}
 // 미리보기: 순환 기준(늦게 온 분은 도착 이후 기준) 게임 수로 계산
 function previewInfo(G){let act=activeP();const s=slotsPerGame(act);if(s<4||!act.length)return null;
   const {g}=stats();const has=st.rounds.length>0;const eff=p=>has?g[p.id]+(p.base||0):0;
-  const run=GG=>{if(curMode()==="mixed"){const M=act.filter(p=>p.g==="m"),F=act.filter(p=>p.g==="f");
+  const FXp=fxMap(act,curMode());
+  const run=GG=>{if(Object.keys(FXp).length)return simU(act,eff,FXp,s,GG,curMode()==="mixed");
+    if(curMode()==="mixed"){const M=act.filter(p=>p.g==="m"),F=act.filter(p=>p.g==="f");
       return [...simulate(M.map(eff),s/2,GG),...simulate(F.map(eff),s/2,GG)];}
     return simulate(act.map(eff),s,GG);};
   const r=run(G);const mn=Math.min(...r),mx=Math.max(...r);
   let best=null;for(let k=1;k<=12;k++){const x=run(k);if(Math.max(...x)===Math.min(...x)){best=k;break;}}
   const idle=curMode()==="mixed"?act.filter(p=>p.g!=="m"&&p.g!=="f").length:0;
-  return {n:act.length,s,rest:act.length-s,mn,mx,cntMax:r.filter(v=>v===mx).length,cntMin:r.filter(v=>v===mn).length,best,has,late:act.some(p=>p.base>0),idle};}
+  return {fxOdd:Object.keys(FXp).length&&(act.length-s)%2===1,n:act.length,s,rest:act.length-s,mn,mx,cntMax:r.filter(v=>v===mx).length,cntMin:r.filter(v=>v===mn).length,best,has,late:act.some(p=>p.base>0),idle};}
 function renderPreview(){const el=$("pv");if(isFixed()||(grouped()&&st.pool.cur<0)){el.innerHTML="";el.hidden=true;return;}el.hidden=false;const G=Math.max(1,+$("rounds").value||1);const P=previewInfo(G);
   if(!P){el.innerHTML=`<span class="pvTxt">참석자가 ${curMode()==="mixed"?"남녀 각각 2명":"4명"} 이상이면 미리보기가 나와요.</span>`;return;}
   const head=`${grouped()?(st.pool.cur+1)+"조 · ":""}참석 ${P.n}명 · 코트 ${courtCount()}면 → 한 게임 ${P.s}명 출전${P.rest?`, ${P.rest}명 휴식`:""}`;
@@ -689,9 +783,9 @@ function renderPreview(){const el=$("pv");if(isFixed()||(grouped()&&st.pool.cur<
   const eq=P.mn===P.mx;
   el.className="pv "+(eq?"ok":"warn");
   el.innerHTML=`<span class="pvTxt">${head}</span><b>${eq?`✓ ${what} 모두 ${P.has?"누적 ":""}${P.mn}게임씩 쳐요`:`${what} 1인당 ${P.mn}~${P.mx}게임 (${P.mx}게임 ${P.cntMax}명, ${P.mn}게임 ${P.cntMin}명)`}</b>`+
-    (P.late?`<span class="pvTxt">늦게 온 분은 도착한 뒤부터 다른 분들과 같게 맞춰 계산해요.</span>`:"")+(P.idle?`<span class="pvTxt">성별이 정해지지 않은 ${P.idle}명은 혼합복식에 들어가지 않아요.</span>`:"")+
-    (!eq&&P.best?`<button type="button" class="pvBtn" data-fit="${P.best}">모두 같게: ${P.best}게임으로 맞추기</button>`:!eq?`<span class="pvTxt">12게임 안에서는 똑같이 맞출 수 없어요. 차이는 최대 1게임이에요.</span>`:"");}
-function repeatStats(rounds){const pt={},op={},cnt={};rounds.forEach(r=>r.courts.forEach(c=>{c.forEach(t=>{const k=pk(t[0],t[1]);pt[k]=(pt[k]||0)+1;});c[0].forEach(a=>c[1].forEach(b=>{const k=pk(a,b);op[k]=(op[k]||0)+1;}));c.flat().forEach(id=>cnt[id]=(cnt[id]||0)+1);}));
+    (P.fxOdd?`<span class="pvTxt">🔗 쉬는 사람이 홀수라 고정 짝이 함께 쉬기 어려워요. 고정 짝이 더 많이 칠 수 있어요.</span>`:"")+(P.late?`<span class="pvTxt">늦게 온 분은 도착한 뒤부터 다른 분들과 같게 맞춰 계산해요.</span>`:"")+(P.idle?`<span class="pvTxt">성별이 정해지지 않은 ${P.idle}명은 혼합복식에 들어가지 않아요.</span>`:"")+
+    (!eq&&P.best?`<button type="button" class="pvBtn" data-fit="${P.best}">모두 같게: ${P.best}게임으로 맞추기</button>`:!eq&&!P.fxOdd?`<span class="pvTxt">12게임 안에서는 똑같이 맞출 수 없어요. 차이는 최대 1게임이에요.</span>`:"");}
+function repeatStats(rounds){const pt={},op={},cnt={};const fixK=new Set((st.fx||[]).map(x=>pk(x[0],x[1])));rounds.forEach(r=>r.courts.forEach(c=>{c.forEach(t=>{const k=pk(t[0],t[1]);if(!fixK.has(k))pt[k]=(pt[k]||0)+1;});c[0].forEach(a=>c[1].forEach(b=>{const k=pk(a,b);op[k]=(op[k]||0)+1;}));c.flat().forEach(id=>cnt[id]=(cnt[id]||0)+1);}));
   const sum=o=>Object.values(o).reduce((a,v)=>a+Math.max(0,v-1),0);const v=Object.values(cnt);return {pr:sum(pt),or:sum(op),mn:v.length?Math.min(...v):0,mx:v.length?Math.max(...v):0};}
 function lateBase(pid){const {g}=stats();const others=activeP().filter(p=>p.id!==pid).map(p=>g[p.id]+(p.base||0));if(!others.length)return 0;
   return Math.max(0,Math.min(...others)-g[pid]);}
@@ -901,14 +995,14 @@ function render(){
     ${pbtn(p.id)}
     <button type="button" class="gbtn g-${p.g||"n"}" data-gen="${p.id}" title="성별 (혼합복식용)" aria-label="${esc(p.name)} 성별">${p.g==="m"?"남":p.g==="f"?"여":"–"}</button>
     <select class="lv" data-lv="${p.id}" aria-label="${esc(p.name)} 실력">${[5,4,3,2,1].map(v=>`<option value="${v}" ${v===p.lv?"selected":""}>${LV[v]}조</option>`).join("")}</select>
-    ${grouped()&&p.pool!=null?`<span class="pchip pc${p.pool}">${p.pool+1}조</span>`:""}${ev?`<button type="button" class="gbtn" data-age="${p.id}" title="연령대">${p.age?AGE[p.age]:"연령"}</button>`:""}<span class="cnt">${ev?`<select class="evt" data-evt="${p.id}" aria-label="${esc(p.name)} 팀"><option value="">팀 –</option>${EVT.slice(0,st.ev.n).map((t,i)=>`<option value="${i}" ${p.et===i?"selected":""}>${t.n}</option>`).join("")}</select>`:fx?(teamOfP(p.id)?tIdx(teamOfP(p.id).id)+"팀":(p.on?"짝 없음":"")):`${g[p.id]}게임 ${w[p.id]}승${l[p.id]}패`}</span>
+    ${grouped()&&p.pool!=null?`<span class="pchip pc${p.pool}">${p.pool+1}조</span>`:""}${ev?`<button type="button" class="gbtn" data-age="${p.id}" title="연령대">${p.age?AGE[p.age]:"연령"}</button>`:""}<span class="cnt">${ev?`<select class="evt" data-evt="${p.id}" aria-label="${esc(p.name)} 팀"><option value="">팀 –</option>${EVT.slice(0,st.ev.n).map((t,i)=>`<option value="${i}" ${p.et===i?"selected":""}>${t.n}</option>`).join("")}</select>`:fx?(teamOfP(p.id)?tIdx(teamOfP(p.id).id)+"팀":(p.on?"짝 없음":"")):`${fxPartner(p.id)?`<span class="fxMark" title="고정 짝: ${esc(nm(fxPartner(p.id)))}">🔗</span>`:""}${g[p.id]}게임 ${w[p.id]}승${l[p.id]}패`}</span>
     <button class="x" data-del="${p.id}" aria-label="${esc(p.name)} 삭제">✕</button></li>`).join("")
     :`<li class="listEmpty">아직 참가자가 없어요.<br>위 칸에 이름을 입력하고 <b>추가</b>를 누르세요.</li>`;
   const on=st.players.filter(p=>p.on),m=on.filter(p=>p.g==="m").length,f=on.filter(p=>p.g==="f").length;
   $("summary").textContent=`전체 ${st.players.length}명 · 참석 ${on.length}명${m||f?` (남 ${m} · 여 ${f})`:""}`+(ev?"":fx?` · ${validTeams().length}팀`:"");
   if(ev){renderEvTeams();renderEvent();}else if(fx){renderTeams();({league:renderLeague,tour:renderTour,group:renderGroup})[fmt()]();}else renderAuto();
-  $("shareBtn").hidden=ev?!st.ev.rounds.length:fx?!hasSched():!st.rounds.length;
-  renderPreview();$("modeNote").textContent=MODE_NOTE[curMode()]||"";
+  $("shareBtn").hidden=ev?!st.ev.rounds.length:fx?!hasSched():!(grouped()&&st.pool.cur<0?allPoolRounds().length:st.rounds.length);$("imgBtn").hidden=$("shareBtn").hidden;
+  renderPreview();renderFx();$("modeNote").textContent=MODE_NOTE[curMode()]||"";
   const has=st.rounds.length>0,N=Math.max(1,+$("rounds").value||1);
   $("gen").textContent=has?"처음부터 다시 짜기":"대진 생성";$("gen").classList.toggle("primary",!has);
   $("nextB").hidden=!has;$("more").hidden=!has;$("autoBtns").hidden=isFixed()||isEvent()||(grouped()&&st.pool.cur<0);$("nextB").textContent=`＋ 다음 회차 짜기 (${N}게임)`;$("nextB").classList.toggle("primary",has);
@@ -924,7 +1018,7 @@ function renderOverall(){const out=$("rounds-out");syncPool();const RS=allPoolRo
   const per=st.pool.pr.map((rs,i)=>{const t=rs.reduce((a,r)=>a+r.courts.length,0),f=rs.reduce((a,r)=>a+r.scores.filter(done).length,0);return `${i+1}조 ${rs.length}게임(${f}/${t})`;}).join(" · ");
   $("tbInfo").textContent=`전체 · ${per}`;$("restart").disabled=!RS.length;
   const leaders=st.pool.pr.map((rs,i)=>{const r=rec(rs);return r.rank.length?`<span><b class="pchip pc${i}">${i+1}조 1위</b> ${pbtn(r.rank[0])} ${r.w[r.rank[0]]}승 ${r.l[r.rank[0]]}패</span>`:"";}).filter(Boolean).join("");
-  out.innerHTML=poolTabs()+(R.rank.length?`<div class="panel standings"><div class="sthd"><h2>전체 순위</h2><button type="button" class="copyBtn" data-copy="all">📤 결과 공유</button></div>
+  out.innerHTML=poolTabs()+(R.rank.length?`<div class="panel standings"><div class="sthd"><h2>전체 순위</h2><button type="button" class="copyBtn" data-copy="all">📤 결과 공유</button><button type="button" class="copyBtn" data-img="all" aria-label="이미지로 공유">🖼</button></div>
     ${leaders?`<div class="leaders">${leaders}</div>`:""}
     <div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>조</th><th>게임</th><th>승</th><th>패</th><th>득실</th><th>승률</th></tr></thead><tbody>
     ${R.rank.map((id,i)=>{const r=rate(R.w[id],R.l[id]);const pl=pOf(id);return `<tr><td>${i+1}</td><td class="tn">${pbtn(id)}</td><td>${pl&&pl.pool!=null?pl.pool+1:"-"}</td><td>${R.w[id]+R.l[id]}</td><td>${R.w[id]}</td><td>${R.l[id]}</td><td>${R.pd[id]>0?"+":""}${R.pd[id]}</td><td><b>${r}%</b></td></tr>`;}).join("")}</tbody></table></div>
@@ -942,7 +1036,7 @@ function renderAuto(){
   const rs=repeatStats(st.rounds);
   const check=`<div class="chkLine"><span class="${rs.pr?"bad":"good"}">같은 파트너 반복 <b>${rs.pr}회</b></span><span class="${rs.or>st.rounds.length?"bad":"good"}">같은 상대 반복 <b>${rs.or}회</b></span><span>1인당 <b>${rs.mn===rs.mx?rs.mn:rs.mn+"~"+rs.mx}게임</b></span></div>`;
   const rp=st.replanAsk&&replanTargets().length?`<div class="replan"><span>참가자가 바뀌었어요. 남은 ${replanTargets().length}게임을 바뀐 인원으로 다시 짤 수 있어요.</span><button type="button" class="primary" id="replanBtn">남은 게임 다시 짜기</button><button type="button" class="link" id="replanNo">그대로 두기</button></div>`:"";
-  const table=poolTabs()+rp+check+`<div class="panel standings"><div class="sthd"><h2>${grouped()?(st.pool.cur+1)+"조 ":""}승률 순위</h2>${ranked.length?'<button type="button" class="copyBtn" data-copy="today">📤 결과 공유</button>':""}</div>
+  const table=poolTabs()+rp+check+`<div class="panel standings"><div class="sthd"><h2>${grouped()?(st.pool.cur+1)+"조 ":""}승률 순위</h2>${ranked.length?'<button type="button" class="copyBtn" data-copy="today">📤 결과 공유</button><button type="button" class="copyBtn" data-img="today" aria-label="이미지로 공유">🖼</button>':""}</div>
     ${ranked.length?`<div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>게임</th><th>승</th><th>패</th><th>득실</th><th>승률</th></tr></thead><tbody>
     ${ranked.map((p,i)=>{const r=rate(w[p.id],l[p.id]);return `<tr><td>${i+1}</td><td class="tn">${pbtn(p.id)}</td><td>${w[p.id]+l[p.id]}</td><td>${w[p.id]}</td><td>${l[p.id]}</td><td>${pd[p.id]>0?"+":""}${pd[p.id]}</td>
       <td><div class="bar"><span style="width:${r}%"></span></div><b>${r}%</b></td></tr>`;}).join("")}</tbody></table></div>`
@@ -974,8 +1068,9 @@ function scoreCtl(sc,ti,attrs,label){const T=target(),wi=scWinner(sc);
   return loseSelect(sc[ti],T,attrs+` data-t="${ti}"`,label);}
 const lvb=id=>st.ui.lv?`<i class="lvb lv${LV[lvOf(id)]}">${LV[lvOf(id)]}</i>`:"";
 function balanceTag(c){const d=Math.abs(c[0].reduce((a,i)=>a+lvOf(i),0)-c[1].reduce((a,i)=>a+lvOf(i),0));return d<=0?"⚖ 균형 좋음":d===1?"⚖ 균형 양호":"⚖ 실력 차 있음";}
+const isFxTeam=t=>fxPartner(t[0])===t[1];
 function team(t,ri,ci,ti,v,isWin){const sc=st.rounds[ri].scores[ci],pend=scWinner(sc)===ti&&!done(sc);
-  return `<div class="team ${isWin||pend?"win":""}"><span class="names">${isWin?'<i class="wb">승</i>':""}${t.map(id=>pbtn(id)+lvb(id)).join("<span class=dot>·</span>")}</span>
+  return `<div class="team ${isWin||pend?"win":""}"><span class="names">${isWin?'<i class="wb">승</i>':""}${isFxTeam(t)?'<i class="fxTag" title="고정 짝">🔗</i>':""}${t.map(id=>pbtn(id)+lvb(id)).join("<span class=dot>·</span>")}</span>
   <span class="sctl">${scoreCtl(sc,ti,`data-k="auto" data-r="${ri}" data-c="${ci}"`,`${ri+1}게임 ${courtName(st.rounds[ri],ci)}`)}</span></div>`;}
 
 function renderTeams(){
@@ -1011,14 +1106,14 @@ function renderLeague(){
   $("tbInfo").textContent=lg.matches.length?`리그전 ${validTeams().length}팀 · 결과 입력 ${fin}/${lg.matches.length}경기 · ${target()}점`:"아직 리그 대진이 없습니다";
   $("restart").disabled=!lg.matches.length;
   if(!lg.matches.length){out.innerHTML=teamsPreview("짝을 확인하고 왼쪽 <b>리그 대진 만들기</b>를 누르세요.");return;}
-  out.innerHTML=`<div class="panel standings"><div class="sthd"><h2>리그 순위</h2>${fin?'<button type="button" class="copyBtn" data-copy="league">📤 결과 공유</button>':""}</div>
+  out.innerHTML=`<div class="panel standings"><div class="sthd"><h2>리그 순위</h2>${fin?'<button type="button" class="copyBtn" data-copy="league">📤 결과 공유</button><button type="button" class="copyBtn" data-img="league" aria-label="이미지로 공유">🖼</button>':""}</div>
     ${standingsTable(lg.teams,lg.matches)}<p class="note">순위는 승수 → 득실 → 두 팀 맞대결 결과 순으로 정해요.</p></div>
     <p class="hint">팀이나 이름을 누르면 그 팀의 경기 계획과 결과를 볼 수 있어요. 끝난 게임은 접혀요.</p>`+slotsHtml(lg.matches,"lg",lg.cn);}
 function bracketHtml(tn,k,copyKey){
   const cm=tourCourts(tn),pd=podium(tn);const all=tn.rounds.flat().filter(m=>!isBye(m)),fin=all.filter(m=>done(m.sc)).length;
-  const champ=pd.champ?`<div class="panel champ"><div class="sthd"><h2>🏆 우승 ${tbtn(pd.champ)}</h2><button type="button" class="copyBtn" data-copy="${copyKey}">📤 결과 공유</button></div>
+  const champ=pd.champ?`<div class="panel champ"><div class="sthd"><h2>🏆 우승 ${tbtn(pd.champ)}</h2><button type="button" class="copyBtn" data-copy="${copyKey}">📤 결과 공유</button><button type="button" class="copyBtn" data-img="${copyKey}" aria-label="이미지로 공유">🖼</button></div>
     <p class="note" style="margin:0">준우승 ${pd.second?tbtn(pd.second):"–"}${pd.thirds.length?` · 공동 3위 ${pd.thirds.map(x=>tbtn(x)).join(", ")}`:""}</p></div>`
-    :(fin?`<div class="panel"><div class="sthd"><h2>토너먼트 진행 중</h2><button type="button" class="copyBtn" data-copy="${copyKey}">📤 결과 공유</button></div><p class="note" style="margin:0">점수를 넣으면 이긴 팀이 다음 칸으로 자동 진출해요.</p></div>`:"");
+    :(fin?`<div class="panel"><div class="sthd"><h2>토너먼트 진행 중</h2><button type="button" class="copyBtn" data-copy="${copyKey}">📤 결과 공유</button><button type="button" class="copyBtn" data-img="${copyKey}" aria-label="이미지로 공유">🖼</button></div><p class="note" style="margin:0">점수를 넣으면 이긴 팀이 다음 칸으로 자동 진출해요.</p></div>`:"");
   const slot=(m,r,i,ti,isWin)=>{const tid=m.t[ti];
     if(tid===null)return `<div class="bt bye"><span>부전승</span></div>`;
     if(tid==="")return `<div class="bt wait"><span>${r>0?`${roundName(tn,r-1)} ${2*i+ti+1}경기 승자`:"?"}</span></div>`;
@@ -1043,7 +1138,7 @@ function renderGroup(){
   $("tbInfo").textContent=`조별리그 ${gp.G}개 조 · 결과 ${fin}/${gp.matches.length}경기`+(st.gk?` · 본선 ${kFin}/${kAll.length}경기`:"")+` · ${target()}점`;$("restart").disabled=false;
   const ko=st.gk?`<h2 style="font-family:var(--display);font-weight:400;margin:4px 0 0">본선 토너먼트</h2>`+bracketHtml(st.gk,"gk","group")
     :allDone?`<div class="panel"><h2>조별리그가 끝났어요</h2><p class="note" style="margin:0 0 6px">각 조 상위 ${gp.adv}팀이 본선 토너먼트에 올라가요. 같은 조 팀은 첫 경기에서 만나지 않게 배치해요.</p><button type="button" class="primary koBtn" id="koBtn">본선 토너먼트 만들기</button></div>`:"";
-  const tables=`<div class="panel"><div class="sthd"><h2>조별 순위</h2>${fin?'<button type="button" class="copyBtn" data-copy="group">📤 결과 공유</button>':""}</div>
+  const tables=`<div class="panel"><div class="sthd"><h2>조별 순위</h2>${fin?'<button type="button" class="copyBtn" data-copy="group">📤 결과 공유</button><button type="button" class="copyBtn" data-img="group" aria-label="이미지로 공유">🖼</button>':""}</div>
     <div class="groups">${gp.groups.map((_,gi)=>`<div><h3 class="tlh">${GL[gi]}조</h3>${standingsTable(gpTeams(gp,gi,st.lg.teams),gp.matches.filter(m=>m.g===gi),gp.matches.filter(m=>m.g===gi).every(m=>done(m.sc))?gp.adv:0)}</div>`).join("")}</div>
     <p class="note">순위는 승수 → 득실 → 맞대결 순이에요. 조 경기가 모두 끝나면 본선 진출 팀이 초록 줄로 표시돼요.</p></div>`;
   out.innerHTML=ko+tables+`<p class="hint">조별리그 경기 · 끝난 게임은 접혀요.</p>`+slotsHtml(gp.matches,"gp",gp.cn,{tag:m=>GL[m.g]+"조",inPlay:()=>true});
@@ -1060,7 +1155,7 @@ function renderHist(){
     ${rows.map((x,i)=>`<tr><td>${i+1}</td><td class="tn"><b>${esc(x.name)}</b></td><td>${x.days}</td><td>${x.w+x.l}</td><td>${x.w}</td><td>${x.l}</td><td>${rate(x.w,x.l)}%</td></tr>`).join("")}</tbody></table></div>
     <p class="note">개인전, 리그전, 토너먼트 경기를 모두 합친 개인 전적이에요.</p>`:`<p class="note">점수를 입력한 경기가 쌓이면 여기에 누적 전적이 나와요.</p>`}</details>`;
   if(!st.history.length){h.innerHTML=`<h2>지난 기록</h2>${cum}<p class="note">점수가 입력된 날의 기록이 날짜별로 여기에 보관돼요. 다음 운동 날 앱을 열거나 '오늘 게임 새로 시작'을 누르면 자동으로 저장됩니다.</p>`;return;}
-  const btns=hi=>`<div class="row"><button type="button" class="copyBtn" data-copy="${hi}">📤 이 날 결과 공유</button><button type="button" class="link" data-delh="${hi}">이 기록 삭제</button></div>`;
+  const btns=hi=>`<div class="row"><button type="button" class="copyBtn" data-copy="${hi}">📤 이 날 결과 공유</button><button type="button" class="copyBtn" data-img="${hi}" aria-label="이미지로 공유">🖼</button><button type="button" class="link" data-delh="${hi}">이 기록 삭제</button></div>`;
   h.innerHTML=`<h2>지난 기록</h2>`+cum+st.history.map((e,hi)=>{const name=id=>esc(e.names[id]||"?");const tg=e.target?` · ${e.target}점`:"";const head=(lbl,extra)=>`<summary><b>${fmtDate(e.date)}</b><span>${lbl}${tg}${extra}</span></summary>`;
     if(e.kind==="event"){const pts=evPoints(e.ev.rounds),mx=Math.max(...pts),P=rec(e.ev.rounds);const win=pts.map((v,i)=>v===mx?EVT[i].n:null).filter(Boolean).join(", ");
       return `<details class="hd">${head(`이벤트 · ${e.ev.n}팀 대항전`,` · ${win} 우승`)}<p class="note">${pts.map((v,i)=>`${EVT[i].n} ${v}`).join(" : ")}${P.rank.length?` · MVP ${name(P.rank[0])}`:""}${e.ev.draws.length?` · 행운상 ${e.ev.draws.map(d=>esc(d.name)).join(", ")}`:""}</p>${btns(hi)}</details>`;}
@@ -1148,7 +1243,7 @@ function renderEvent(){const out=$("league-out"),E=st.ev,R=E.rounds;
   const board=`<div class="board">${EVT.slice(0,E.n).map((t,i)=>`<div class="bTeam ${fin&&pts[i]===mx?"lead":""}" style="--tc:${t.c}"><span>${t.n}</span><b>${pts[i]}</b><small>${evActive().filter(p=>p.et===i).length}명</small></div>`).join(E.n===2?'<div class="bVs">:</div>':"")}</div>`;
   if(!R.length){out.innerHTML=board+`<div class="empty">이벤트 팀 대항전이에요.<br>참가자를 추가하고 왼쪽 <b>팀 고르게 나누기</b> → <b>대진 생성</b>을 누르세요.<br>경기마다 서로 다른 팀끼리 맞붙고, 이긴 경기 수가 팀 점수가 돼요.</div>`;return;}
   const P=rec(R);const mvp=P.rank[0];const lead=pts.map((v,i)=>v===mx?i:-1).filter(i=>i>=0);
-  const awards=`<div class="panel standings"><div class="sthd"><h2>시상 정리</h2><span class="tbBtns"><button type="button" class="drawBtn" id="drawBtn">🎁 경품 추첨</button>${fin?'<button type="button" class="copyBtn" data-copy="event">📤 결과 공유</button>':""}</span></div>
+  const awards=`<div class="panel standings"><div class="sthd"><h2>시상 정리</h2><span class="tbBtns"><button type="button" class="drawBtn" id="drawBtn">🎁 경품 추첨</button>${fin?'<button type="button" class="copyBtn" data-copy="event">📤 결과 공유</button><button type="button" class="copyBtn" data-img="event" aria-label="이미지로 공유">🖼</button>':""}</span></div>
     <div class="awards"><div><small>${fin===tot?"우승 팀":"현재 1위"}</small><b>${fin?lead.map(i=>EVT[i].n).join(", ")+(lead.length>1?" (공동)":""):"–"}</b></div>
     <div><small>MVP (개인 최다승)</small><b>${mvp?pbtn(mvp)+` ${P.w[mvp]}승 ${P.l[mvp]}패`:"–"}</b></div>
     <div><small>경품·행운상</small><b>${E.draws.length?E.draws.map(d=>`${esc(d.prize)} ${esc(d.name)}`).join(", "):"아직 추첨 전"}</b></div></div></div>`;
@@ -1203,7 +1298,7 @@ function showPlayer(pid){
     const c=r.courts[ci],ti=c[0].includes(pid)?0:1,row={ri,court:courtName(r,ci),partner:c[ti].find(x=>x!==pid),opp:c[1-ti],sc:r.scores[ci],ti,fin:done(r.scores[ci])};
     if(!row.fin&&!next)next=row;rows.push(row);});
   const rt=rate(w[pid],l[pid]);
-  openSheet(sheetTop(esc(p.name),[st.ui.lv?`실력 ${LV[p.lv]}조`:"",p.g?(p.g==="m"?"남":"여"):"",p.on?"오늘 참석":"오늘 불참"].filter(Boolean).join(" · "))+kpis([[g[pid],"참여 게임"],[`${w[pid]}승 ${l[pid]}패`,"전적"],[rt==null?"–":rt+"%","승률"],[(pd[pid]>0?"+":"")+pd[pid],"득실"]])+
+  openSheet(sheetTop(esc(p.name),[st.ui.lv?`실력 ${LV[p.lv]}조`:"",p.g?(p.g==="m"?"남":"여"):"",p.on?"오늘 참석":"오늘 불참",fxPartner(pid)?`🔗 고정 짝 ${esc(nm(fxPartner(pid)))}`:""].filter(Boolean).join(" · "))+kpis([[g[pid],"참여 게임"],[`${w[pid]}승 ${l[pid]}패`,"전적"],[rt==null?"–":rt+"%","승률"],[(pd[pid]>0?"+":"")+pd[pid],"득실"]])+
     (next?`<div class="next"><div class="t">다음 차례 · ${next.ri+1}게임</div><div class="m">${next.court}</div><div class="s">파트너 ${esc(nm(next.partner))} · 상대 ${next.opp.map(x=>esc(nm(x))).join(", ")}</div></div>`
       :rows.length?`<p class="note" style="margin:0 0 14px">${g[pid]?"짜인 게임을 모두 마쳤어요.":"아직 배정된 게임이 없어요."}</p>`:"")+
     (rows.length?`<h3 class="tlh">게임 계획과 결과</h3><ul class="tl">${rows.map(x=>{
@@ -1235,6 +1330,105 @@ function showTeam(tid){
     (next?`<div class="next"><div class="t">다음 차례 · ${next.label}</div><div class="m">${next.where}</div><div class="s">상대 ${tIdx(next.opp)}팀 ${esc(tName(tOf(next.opp)))}</div></div>`:"")+
     `<h3 class="tlh">경기 계획과 결과</h3><ul class="tl">${rows.map(x=>x.bye?`<li class="restRow"><span class="rd">${x.label}</span><span class="who">부전승으로 다음 라운드 진출</span><span class="res w">진출</span></li>`
       :`<li class="${x===next?"cur":""}"><span class="rd">${x.label}</span><span class="who">${x.where}<em>상대 ${x.opp?tIdx(x.opp)+"팀 "+esc(tName(tOf(x.opp))):"이전 경기 승자"}</em></span>${resCell(x.my,x.op,x.fin,x===next)}</li>`).join("")}</ul>`);}
+
+/* ---------- 회비 장부 ---------- */
+const won=n=>(n<0?"-":"")+Math.abs(Math.round(n)).toLocaleString("ko-KR")+"원";
+const ym=d=>d.slice(0,7),ymTxt=m=>`${+m.slice(0,4)}년 ${+m.slice(5,7)}월`;
+let feeT="in",feeTab="list",feeM=null;
+function feeNames(){const F=st.fee.items;const ns=[];st.players.forEach(p=>{if(!ns.includes(p.name))ns.push(p.name);});F.forEach(i=>{if(i.t==="in"&&i.who&&!ns.includes(i.who))ns.push(i.who);});return ns;}
+function feeSum(items,t){return items.filter(i=>i.t===t).reduce((a,i)=>a+i.a,0);}
+function feeMonths(){const ms=new Set(st.fee.items.map(i=>ym(i.d)));ms.add(ym(today()));return [...ms].sort().reverse();}
+function feePeople(m){const M=st.fee.monthly||0;return feeNames().map(n=>{const paid=st.fee.items.filter(i=>i.t==="in"&&i.who===n&&ym(i.d)===m).reduce((a,i)=>a+i.a,0);
+  return {n,paid,st:paid<=0?"none":M&&paid<M?"part":"ok"};});}
+function showFee(){const F=st.fee.items,T=today(),m0=ym(T);if(!feeM)feeM=m0;
+  const bal=feeSum(F,"in")-feeSum(F,"out"),thisM=F.filter(i=>ym(i.d)===m0);
+  const names=feeNames();
+  let body="";
+  if(feeTab==="list"){const L=F.slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id.localeCompare(a.id));
+    body=L.length?`<ul class="feeList">${L.slice(0,100).map(i=>`<li><span class="fd">${+i.d.slice(5,7)}/${+i.d.slice(8)}</span><span class="fw">${i.t==="in"?esc(i.who||"입금"):"지출"}${i.memo?`<em>${esc(i.memo)}</em>`:""}</span><b class="${i.t==="in"?"fin":"fout"}">${i.t==="in"?"+":"−"}${won(i.a)}</b><button type="button" class="x" data-fdel="${i.id}" aria-label="이 내역 삭제">✕</button></li>`).join("")}</ul>${L.length>100?`<p class="note">최근 100건만 보여요.</p>`:""}`
+      :`<p class="note">아직 기록이 없어요. 위에서 입금이나 지출을 기록해 보세요.</p>`;}
+  else if(feeTab==="people"){const M=st.fee.monthly||0;const ps=feePeople(feeM);const ok=ps.filter(p=>p.st==="ok").length;
+    body=`<div class="row feeSet"><select id="feeMon" aria-label="월 선택">${feeMonths().map(m=>`<option value="${m}" ${m===feeM?"selected":""}>${ymTxt(m)}</option>`).join("")}</select>
+      <label>월 회비 <input type="number" id="feeMonthly" inputmode="numeric" min="0" step="1000" value="${M||""}" placeholder="예: 30000"> 원</label></div>
+      ${M?`<p class="note" style="margin:6px 0">${ymTxt(feeM)} 납부 ${ok}명 / ${ps.length}명</p>`:`<p class="note" style="margin:6px 0">월 회비 금액을 넣으면 '납부 처리' 버튼으로 바로 기록할 수 있어요.</p>`}
+      <ul class="feeList">${ps.map(p=>`<li><span class="fw">${esc(p.n)}</span><span class="fst ${p.st}">${p.st==="ok"?"✓ 납부":p.st==="part"?"일부 납부":"미납"}${p.paid?` · ${won(p.paid)}`:""}</span>${p.st==="ok"?"":`<button type="button" class="fpay" data-fpay="${esc(p.n)}" ${M?"":"disabled"}>납부 처리</button>`}</li>`).join("")}</ul>
+      <div class="row" style="justify-content:flex-end;margin-top:10px"><button type="button" class="copyBtn" id="feeShareP">📤 납부 현황 공유</button></div>`;}
+  else{const ms=[...new Set(F.map(i=>ym(i.d)))].sort();let run=0;const rows=ms.map(m=>{const it=F.filter(i=>ym(i.d)===m);const a=feeSum(it,"in"),b=feeSum(it,"out");run+=a-b;return {m,a,b,run};}).reverse();
+    body=rows.length?`<div class="tbl"><table><thead><tr><th>월</th><th>입금</th><th>지출</th><th>잔액</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${ymTxt(r.m)}</td><td class="fin">${won(r.a)}</td><td class="fout">${won(r.b)}</td><td><b>${won(r.run)}</b></td></tr>`).join("")}</tbody></table></div>
+      <div class="row" style="justify-content:flex-end;margin-top:10px"><button type="button" class="copyBtn" id="feeShareM">📤 월별 결산 공유</button></div>`:`<p class="note">기록이 생기면 달마다 입금·지출·잔액이 정리돼요.</p>`;}
+  openSheet(sheetTop("💰 회비 장부","이 휴대폰에만 저장돼요 · 백업 파일에 함께 담겨요")+
+    `<div class="feeK">`+kpis([[won(bal),"현재 잔액"],[won(feeSum(thisM,"in")),`${+m0.slice(5)}월 입금`],[won(feeSum(thisM,"out")),`${+m0.slice(5)}월 지출`]])+`</div>`+
+    `<div class="feeForm"><div class="seg" role="group" aria-label="구분"><button type="button" data-ft="in" class="${feeT==="in"?"on":""}">＋ 입금</button><button type="button" data-ft="out" class="${feeT==="out"?"on":""}">− 지출</button></div>
+      <input type="date" id="fD" value="${T}" aria-label="날짜">
+      <input type="number" id="fA" inputmode="numeric" min="0" step="1000" placeholder="금액 (원)" aria-label="금액">
+      ${feeT==="in"?`<input type="text" id="fW" list="feeNL" placeholder="누가 냈나요 (이름)" aria-label="낸 사람"><datalist id="feeNL">${names.map(n=>`<option value="${esc(n)}">`).join("")}</datalist>`:""}
+      <input type="text" id="fM" placeholder="${feeT==="in"?"내용 (예: 10월 회비)":"내용 (예: 셔틀콕 2박스, 코트 대관)"}" aria-label="내용">
+      <button type="button" class="primary" id="fAdd">${feeT==="in"?"입금 기록하기":"지출 기록하기"}</button></div>
+    <div class="ftabs" role="tablist">${[["list","내역"],["people","사람별"],["month","월별"]].map(([k,l])=>`<button type="button" role="tab" data-ftab="${k}" class="${feeTab===k?"on":""}" aria-selected="${feeTab===k}">${l}</button>`).join("")}</div>`+body);}
+function feeAdd(item){item.id="f"+Date.now()+Math.floor(Math.random()*1000);st.fee.items.push(item);save();}
+function feePText(){const ps=feePeople(feeM),M=st.fee.monthly||0;const ok=ps.filter(p=>p.st==="ok"),no=ps.filter(p=>p.st!=="ok");
+  return [`💰 ${ymTxt(feeM)} 회비 납부 현황${M?` (월 ${won(M)})`:""}`,"",`✅ 납부 ${ok.length}명: ${ok.map(p=>p.n).join(", ")||"-"}`,`⏳ 미납 ${no.length}명: ${no.map(p=>p.n+(p.st==="part"?"(일부)":"")).join(", ")||"-"}`,"",`현재 잔액 ${won(feeSum(st.fee.items,"in")-feeSum(st.fee.items,"out"))}`].concat(FOOT).join("\n");}
+function feeMText(){const F=st.fee.items;const ms=[...new Set(F.map(i=>ym(i.d)))].sort();let run=0;const L=["💰 회비 월별 결산",""];
+  ms.forEach(m=>{const it=F.filter(i=>ym(i.d)===m);const a=feeSum(it,"in"),b=feeSum(it,"out");run+=a-b;L.push(`${ymTxt(m)}: 입금 ${won(a)} · 지출 ${won(b)} · 잔액 ${won(run)}`);});
+  const lastM=ms[ms.length-1];if(lastM){const outs=F.filter(i=>ym(i.d)===lastM&&i.t==="out");if(outs.length){L.push("",`[${ymTxt(lastM)} 지출 내역]`);outs.forEach(i=>L.push(`${+i.d.slice(5,7)}/${+i.d.slice(8)} ${i.memo||"지출"}: ${won(i.a)}`));}}
+  return L.concat(FOOT).join("\n");}
+$("feeBtn").onclick=()=>{feeM=null;showFee();};
+document.addEventListener("click",async e=>{const t=e.target;if($("ov").hidden)return;
+  const ft=t.closest("[data-ft]");if(ft){feeT=ft.dataset.ft;showFee();return;}
+  const tb=t.closest("[data-ftab]");if(tb){feeTab=tb.dataset.ftab;showFee();return;}
+  if(t.id==="fAdd"){const a=parseInt($("fA").value,10),d=$("fD").value||today();if(!(a>0)){flash("금액을 넣어 주세요.");$("fA").focus();return;}
+    const who=feeT==="in"?($("fW").value||"").trim():"";if(feeT==="in"&&!who){flash("누가 냈는지 이름을 넣어 주세요.");$("fW").focus();return;}
+    feeAdd({d,t:feeT,a,who,memo:$("fM").value.trim()});showFee();flash(`${feeT==="in"?who+" 님 입금":"지출"} ${won(a)}을 기록했어요.`);return;}
+  const fd=t.closest("[data-fdel]");if(fd){const it=st.fee.items.find(i=>i.id===fd.dataset.fdel);if(!it)return;$("ov").hidden=true;
+    const ok=await ask("이 내역을 삭제할까요?",`${it.d} ${it.t==="in"?(it.who||"입금"):"지출"} ${won(it.a)}${it.memo?` (${it.memo})`:""}`,"삭제",true);
+    if(ok){st.fee.items=st.fee.items.filter(i=>i!==it);save();}showFee();return;}
+  const fp=t.closest("[data-fpay]");if(fp){const n=fp.dataset.fpay,M=st.fee.monthly||0;if(!M)return;const paid=feePeople(feeM).find(p=>p.n===n).paid;const a=Math.max(0,M-paid)||M;
+    const d=feeM===ym(today())?today():feeM+"-01";feeAdd({d,t:"in",a,who:n,memo:`${+feeM.slice(5)}월 회비`});showFee();flash(`${n} 님 ${+feeM.slice(5)}월 회비 ${won(a)} 납부로 기록했어요.`);return;}
+  if(t.id==="feeShareP"){shareText(feePText(),"납부 현황을 복사했어요. 단톡방에 붙여넣기 하세요.");return;}
+  if(t.id==="feeShareM"){shareText(feeMText(),"월별 결산을 복사했어요. 단톡방에 붙여넣기 하세요.");return;}});
+document.addEventListener("change",e=>{const t=e.target;
+  if(t.id==="feeMon"){feeM=t.value;showFee();}
+  if(t.id==="feeMonthly"){st.fee.monthly=Math.max(0,parseInt(t.value,10)||0);save();showFee();}});
+
+/* ---------- 홈 화면에 추가 ---------- */
+let instEvt=null;
+const standalone=()=>{try{return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;}catch(e){return false;}};
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();instEvt=e;});
+window.addEventListener("appinstalled",()=>{$("instBtn").hidden=true;flash("홈 화면에 추가했어요! 이제 셔틀콕 아이콘으로 바로 열 수 있어요.");});
+if(standalone())$("instBtn").hidden=true;
+if("serviceWorker" in navigator&&/github\.io$/.test(location.hostname))navigator.serviceWorker.register("sw.js").catch(()=>{});
+$("instBtn").onclick=async()=>{if(instEvt){const ev=instEvt;instEvt=null;ev.prompt();try{const r=await ev.userChoice;if(r&&r.outcome==="accepted")return;}catch(e){}return;}showInstHelp();};
+function showInstHelp(){const ua=navigator.userAgent||"";const kakao=/KAKAOTALK/i.test(ua),ios=/iPhone|iPad|iPod/i.test(ua),samsung=/SamsungBrowser/i.test(ua);
+  const S={kakao:`<h3 class="tlh">💬 카카오톡에서 열었다면</h3><p class="note">카카오톡 안에서는 홈 화면 추가가 안 돼요. 오른쪽 아래(또는 위) <b>⋮</b> → <b>다른 브라우저로 열기</b>를 누른 뒤, 열린 크롬에서 이 버튼을 다시 눌러 주세요.</p>`,
+    chrome:`<h3 class="tlh">🤖 갤럭시 · 크롬</h3><p class="note">오른쪽 위 <b>⋮</b> → <b>홈 화면에 추가</b>(또는 <b>앱 설치</b>) → <b>설치</b>를 누르세요.</p>`,
+    samsung:`<h3 class="tlh">🌐 삼성 인터넷</h3><p class="note">아래쪽 <b>≡</b> → <b>현재 페이지 추가</b> → <b>홈 화면</b>을 누르세요.</p>`,
+    ios:`<h3 class="tlh">🍎 아이폰 · Safari</h3><p class="note">아래쪽 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b> → <b>추가</b>를 누르세요. 아이폰은 홈 화면 앱과 Safari의 기록이 따로 저장돼요. 옮길 때는 '백업·불러오기'를 쓰세요.</p>`};
+  const order=kakao?["kakao","chrome","ios"]:ios?["ios","kakao"]:samsung?["samsung","chrome","kakao"]:["chrome","samsung","ios","kakao"];
+  openSheet(sheetTop("📲 홈 화면에 추가","셔틀콕 아이콘이 생기고 주소창 없이 앱처럼 열려요")+order.map(k=>S[k]).join("")+
+    `<p class="note" style="margin-top:14px">홈 화면 아이콘으로 열어도 지금 쓰던 명단과 기록은 그대로예요. (같은 크롬에서 추가한 경우)</p>`);}
+
+/* ---------- 고정 짝 ---------- */
+function renderFx(){const el=$("fxBox");if(!el)return;const L=st.fx||[];
+  const warn=curMode()==="mixed"?L.filter(([a,b])=>{const A=pOf(a),B=pOf(b);return !A.g||!B.g||A.g===B.g;}):[];
+  el.innerHTML=(L.length?L.map(([a,b],i)=>`<span class="fxChip">🔗 ${esc(nm(a))} + ${esc(nm(b))}<button type="button" class="x" data-fxdel="${i}" aria-label="${esc(nm(a))}, ${esc(nm(b))} 고정 짝 풀기">✕</button></span>`).join(""):`<span class="note" style="margin:0">없음 · 모두 매 게임 파트너가 바뀌어요</span>`)+
+    `<button type="button" id="fxAdd">＋ 짝 묶기</button>`+(warn.length?`<span class="note" style="margin:0;color:var(--lose)">혼합복식에서는 남+여 고정 짝만 적용돼요.</span>`:"");}
+function showFxAdd(){const used=new Set((st.fx||[]).flat());const ps=st.players.filter(p=>!used.has(p.id));
+  if(ps.length<2){flash("짝으로 묶을 수 있는 사람이 2명 이상 있어야 해요.");return;}
+  const opt=`<option value="">— 선택 —</option>`+ps.map(p=>`<option value="${p.id}">${esc(p.name)}${st.ui.lv?` (${LV[p.lv]})`:""}${p.on?"":" · 불참"}</option>`).join("");
+  openSheet(sheetTop("🔗 고정 짝 묶기","두 사람은 항상 같은 팀으로 뛰고, 쉴 때도 함께 쉬어요")+
+    `<div class="fxForm"><select id="fxA" aria-label="첫째 사람">${opt}</select><span>+</span><select id="fxB" aria-label="둘째 사람">${opt}</select></div>
+    <p class="note">나머지 사람들은 지금처럼 파트너와 상대가 최대한 겹치지 않게 돌아가요. 고정 팀도 상대는 매번 바뀌어요.<br>코트가 1면이면 고정 팀도 다른 사람들과 똑같이 번갈아 쉬어요.</p>
+    <div class="row" style="justify-content:flex-end"><button type="button" class="primary" id="fxOk">묶기</button></div>`);}
+async function fxChanged(msg){const t=replanTargets();save();render();
+  if(st.rounds.length&&t.length){st.replanAsk=true;save();render();flash(msg+" 아래 '남은 게임 다시 짜기'를 누르면 이미 짜인 게임에도 반영돼요.");}else flash(msg+(st.rounds.length?" 다음에 짜는 게임부터 반영돼요.":""));}
+document.addEventListener("click",async e=>{
+  if(e.target.id==="fxAdd"){showFxAdd();return;}
+  if(e.target.id==="fxOk"){const a=$("fxA").value,b=$("fxB").value;if(!a||!b){flash("두 사람을 모두 골라 주세요.");return;}if(a===b){flash("서로 다른 두 사람을 골라 주세요.");return;}
+    if(curMode()==="mixed"){const A=pOf(a),B=pOf(b);if(A.g&&B.g&&A.g===B.g){flash("혼합복식에서는 남+여로 묶어야 해요.");return;}}
+    st.fx.push([a,b]);closeSheet();fxChanged(`${nm(a)} + ${nm(b)} 고정 짝으로 묶었어요.`);return;}
+  const d=e.target.closest("[data-fxdel]");if(d){const [a,b]=st.fx[+d.dataset.fxdel];
+    if(!await ask("고정 짝을 풀까요?",`${nm(a)} + ${nm(b)} 짝을 풀면 두 사람도 매 게임 파트너가 바뀌어요.`,"풀기"))return;
+    st.fx.splice(+d.dataset.fxdel,1);fxChanged(`${nm(a)} + ${nm(b)} 고정 짝을 풀었어요.`);}});
 
 /* ---------- 백업 ---------- */
 function showBackup(){
@@ -1279,6 +1473,56 @@ function scheduleText(){const T=target(),f=fmt(),d=fmtDate(today());const L=[];
       const slots=[...new Set(gp.matches.map(m=>m.slot))];slots.forEach(sl=>{L.push("",`[${sl+1}게임]`);gp.matches.filter(m=>m.slot===sl).forEach(m=>L.push(`${GL[m.g]}조 ${lCourt(gp.cn,m)}: ${tIdx(m.t[0])}팀 vs ${tIdx(m.t[1])}팀${done(m.sc)?` (${m.sc[0]}:${m.sc[1]})`:""}`));});}}
   return L.concat(FOOT).join("\n");}
 $("shareBtn").onclick=()=>shareText(scheduleText(),"대진표를 복사했어요. 단톡방에 붙여넣기 하세요.");
+$("imgBtn").onclick=()=>shareImage(scheduleText(),`배드민턴-대진표-${today()}.png`);
+/* ---------- 이미지 공유: 공유 글을 카드 모양 이미지로 그림 ---------- */
+const IMGF='"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif';
+function textCanvas(txt){
+  let L=txt.split("\n");const brand=L.indexOf(FOOT[1]);if(brand>0)L=L.slice(0,brand);while(L.length&&!L[L.length-1].trim())L.pop();
+  const W=1080,PAD=60,IW=W-PAD*2;const cv=document.createElement("canvas");const x=cv.getContext("2d");if(!x)return null;
+  const F=(sz,b)=>`${b?"700":"400"} ${sz}px ${IMGF}`;
+  const wrap=(t,font,w)=>{x.font=font;const out=[];let cur="";
+    for(const wd of t.split(/(\s+)/)){if(!wd)continue;if(x.measureText(cur+wd).width<=w){cur+=wd;continue;}
+      if(cur.trim()){out.push(cur.trimEnd());cur="";}if(!wd.trim())continue;
+      for(const ch of wd){if(x.measureText(cur+ch).width>w&&cur){out.push(cur);cur=ch;}else cur+=ch;}}
+    if(cur.trim())out.push(cur.trimEnd());return out.length?out:[""];};
+  const ops=[];let y=0;
+  // 머리
+  const head=[];let i=0;while(i<L.length&&L[i].trim()){head.push(L[i]);i++;}
+  y=PAD+10;const t1=wrap(head[0]||"",F(50,1),IW);t1.forEach(t=>{ops.push(["t",t,PAD,y+50,F(50,1),"#ffffff"]);y+=64;});
+  head.slice(1).forEach(h=>wrap(h,F(30),IW).forEach(t=>{ops.push(["t",t,PAD,y+34,F(30),"rgba(255,255,255,.85)"]);y+=44;}));
+  y+=PAD-10;const headH=y;y+=30;
+  for(;i<L.length;i++){const ln=L[i];
+    if(!ln.trim()){y+=16;continue;}
+    if(/^■/.test(ln)){ops.push(["band",y,58]);ops.push(["t",ln.replace(/^■+\s*/,""),PAD+24,y+41,F(32,1),"#ffffff"]);y+=74;continue;}
+    if(/^\[.*\]$/.test(ln)){ops.push(["bar",PAD,y+6,8,40]);ops.push(["t",ln.slice(1,-1),PAD+22,y+40,F(34,1),"#1f6b52"]);y+=62;continue;}
+    const rk=ln.match(/^(\d+)\.\s(.*)$/);
+    if(rk){const n=+rk[1];const lines=wrap(rk[2],F(32,n<=3),IW-80);ops.push(["rank",n,PAD+24,y+30]);lines.forEach(t=>{ops.push(["t",t,PAD+70,y+42,F(32,n<=3),"#1b2a24"]);y+=46;});y+=8;continue;}
+    const c=ln.indexOf(": ");
+    if(c>0&&c<=16){const lab=ln.slice(0,c),body=ln.slice(c+2);x.font=F(26,1);const lw=Math.min(x.measureText(lab).width+28,320);
+      const lines=wrap(body,F(32),IW-lw-16);const h=lines.length*46+18;ops.push(["card",PAD,y,IW,h]);ops.push(["pill",lab,PAD+12,y+14,lw-8]);
+      lines.forEach((t,k)=>ops.push(["row",t,PAD+lw+16,y+46+k*46]));y+=h+12;continue;}
+    wrap(ln,F(30),IW).forEach(t=>{ops.push(["t",t,PAD,y+36,F(30),"#5d6e66"]);y+=44;});}
+  y+=30;const H=y+90;cv.width=W;cv.height=H;
+  x.fillStyle="#eef2ef";x.fillRect(0,0,W,H);x.fillStyle="#1f6b52";x.fillRect(0,0,W,headH);x.fillStyle="#e8b931";x.fillRect(0,headH-10,W,10);
+  ops.forEach(o=>{const k=o[0];
+    if(k==="t"){x.font=o[4];x.fillStyle=o[5];x.fillText(o[1],o[2],o[3]);}
+    else if(k==="band"){x.fillStyle="#1f6b52";x.fillRect(PAD,o[1],IW,o[2]);}
+    else if(k==="bar"){x.fillStyle="#e8b931";x.fillRect(o[1],o[2],o[3],o[4]);}
+    else if(k==="rank"){const col=["#e8b931","#b8c2c8","#d39a62"][o[1]-1]||"#d3ddd7";x.fillStyle=col;x.beginPath();x.arc(o[2],o[3],24,0,Math.PI*2);x.fill();x.fillStyle="#1b2a24";x.font=F(26,1);x.textAlign="center";x.fillText(o[1],o[2],o[3]+9);x.textAlign="left";}
+    else if(k==="card"){x.fillStyle="#ffffff";x.strokeStyle="#d3ddd7";x.lineWidth=2;const r=14,[_,a,b,w,h]=o;x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath();x.fill();x.stroke();}
+    else if(k==="pill"){x.fillStyle="#e3ece7";x.fillRect(o[2],o[3],o[4],40);x.fillStyle="#1f6b52";x.font=F(26,1);x.fillText(o[1],o[2]+10,o[3]+29);}
+    else if(k==="row"){const t=o[1];const m=t.match(/^(.*?)(\s?\(?\d+:\d+\)?\s?)(.*)$/);x.font=F(32);x.fillStyle="#1b2a24";
+      if(m){let px=o[2];x.fillText(m[1],px,o[3]);px+=x.measureText(m[1]).width;x.font=F(32,1);x.fillStyle="#c4452f";x.fillText(m[2],px,o[3]);px+=x.measureText(m[2]).width;x.font=F(32);x.fillStyle="#1b2a24";x.fillText(m[3],px,o[3]);}
+      else x.fillText(t,o[2],o[3]);}});
+  x.fillStyle="#5d6e66";x.font=F(26,1);x.fillText("🏸 기석 배드민턴 매치메이커",PAD,H-40);x.font=F(22);x.textAlign="right";x.fillText("gogiseok.github.io/badminton",W-PAD,H-40);x.textAlign="left";
+  return cv;}
+async function shareImage(txt,fname){let blob=null;
+  try{const cv=textCanvas(txt);if(cv)blob=await new Promise(r=>cv.toBlob(r,"image/png"));}catch(e){}
+  if(!blob){flash("이 화면에서는 이미지를 만들 수 없어 글로 공유할게요.");shareText(txt);return;}
+  let file=null;try{file=new File([blob],fname,{type:"image/png"});}catch(e){}
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file]});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+  const url=URL.createObjectURL(blob);
+  openSheet(sheetTop("🖼 이미지로 공유","사진을 길게 눌러 저장하거나 공유하세요")+`<img src="${url}" class="shotImg" alt="공유용 이미지"><div class="row" style="justify-content:flex-end;margin-top:10px"><a class="btnA" href="${url}" download="${fname}">이미지 저장</a></div>`);}
 function copyText(txt,okMsg){
   const fallback=()=>openSheet(sheetTop("복사하기","아래 글을 길게 눌러 전체 선택 후 복사하세요")+`<textarea id="cpTxt" readonly>${esc(txt)}</textarea>`)||($("cpTxt").select());
   try{navigator.clipboard.writeText(txt).then(()=>flash(okMsg||"결과를 복사했어요. 단톡방에 붙여넣기 하세요."),fallback);}catch(e){fallback();}}
@@ -1291,7 +1535,10 @@ document.addEventListener("click",async e=>{
   if(pn){if(pn.dataset.tid){showTeam(pn.dataset.tid);return;}
     const t=isFixed()&&teamOfP(pn.dataset.pid);if(t&&hasSched())showTeam(t.id);else showPlayer(pn.dataset.pid);return;}
   const cp=e.target.closest("[data-copy]");
-  if(cp){const k=cp.dataset.copy;const copyText=shareText;
+  const ib=e.target.closest("[data-img]");
+  if(ib){const k=ib.dataset.img;let t="";textFor(k,x=>t=x);shareImage(t,`배드민턴-결과-${today()}.png`);return;}
+  if(cp){const k=cp.dataset.copy;textFor(k,shareText);return;}});
+function textFor(k,copyText){
     if(k==="today")copyText(resultText(st.rounds,nm,st.day||today(),target(),grouped()?`${st.pool.cur+1}조`:""));
     else if(k==="all")copyText(poolResultText());
     else if(k==="event")copyText(eventText(st.ev,nm,st.ev.day||today(),target()));
@@ -1299,8 +1546,8 @@ document.addEventListener("click",async e=>{
     else if(k==="tour")copyText(tourText(st.tn,st.lg.teams,nm,st.tn.day||today(),target()));
     else if(k==="group")copyText(groupText(st.gp,st.gk,st.lg.teams,nm,st.gp.day||today(),target()));
     else{const h=st.history[+k],name=id=>h.names[id]||"?",tg=h.target||21;
-      copyText(h.kind==="event"?eventText(h.ev,name,h.date,tg):h.kind==="tour"?tourText(h.tn,h.teams,name,h.date,tg):h.kind==="group"?groupText(h.gp,h.gk,h.teams,name,h.date,tg):h.kind==="league"?leagueText(h.lg.teams,h.lg.matches,h.lg.cn,name,h.date,tg):resultText(h.rounds,name,h.date,h.target));}
-    return;}
+      copyText(h.kind==="event"?eventText(h.ev,name,h.date,tg):h.kind==="tour"?tourText(h.tn,h.teams,name,h.date,tg):h.kind==="group"?groupText(h.gp,h.gk,h.teams,name,h.date,tg):h.kind==="league"?leagueText(h.lg.teams,h.lg.matches,h.lg.cn,name,h.date,tg):resultText(h.rounds,name,h.date,h.target));}}
+document.addEventListener("click",async e=>{
   const dh=e.target.closest("[data-delh]");
   if(dh){const h=st.history[+dh.dataset.delh];if(await ask("이 기록을 삭제할까요?",`${fmtDate(h.date)} 기록이 완전히 지워져요.`,"삭제",true)){st.history.splice(+dh.dataset.delh,1);save();render();flash("기록을 삭제했어요.");}return;}
   const gb=e.target.closest("[data-gen]");
@@ -1331,7 +1578,7 @@ $("list").addEventListener("click",async e=>{const id=e.target.dataset.del;if(!i
   if(!await ask(`${p.name} 님을 삭제할까요?`,isFixed()?"명단과 팀에서 빠져요.":st.rounds.length?"명단에서 빠지고, 아직 시작 안 한 게임에서는 다른 사람으로 바뀌어요.":"명단에서 빠져요.","삭제",true))return;
   if(isFixed()){const tm=teamOfP(id);if(tm){if(tm.a===id)tm.a=null;else tm.b=null;st.lg.teams=st.lg.teams.filter(x=>x.a||x.b);}}
   else if(p.on){p.on=false;leaveSwap(id);}
-  st.players=st.players.filter(x=>x.id!==id);save();render();});
+  st.fx=(st.fx||[]).filter(x=>!x.includes(id));st.players=st.players.filter(x=>x.id!==id);save();render();});
 $("gen").onclick=async()=>{
   if(st.rounds.length&&!await ask("처음부터 다시 짤까요?",`${grouped()?(st.pool.cur+1)+"조에 ":""}이미 짜인 ${st.rounds.length}게임이 모두 지워지고 처음부터 새로 짭니다.\n이어서 짜려면 취소 후 '＋ 다음 회차 짜기'를 누르세요.\n점수를 넣은 기록은 '지난 기록'에 보관돼요.`,"새로 짜기",true))return;
   const kept=grouped()?false:archiveToday2();st.rounds.splice(0);activeP().forEach(p=>p.base=0);st.replanAsk=false;addRounds(Math.max(1,+$("rounds").value||1),0);if(kept)flash("이전 게임 기록은 '지난 기록'에 보관하고 새로 짰어요.");};
