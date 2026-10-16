@@ -1402,14 +1402,19 @@ window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();instEvt=e;}
 window.addEventListener("appinstalled",()=>{$("instBtn").hidden=true;flash("홈 화면에 추가했어요! 이제 셔틀콕 아이콘으로 바로 열 수 있어요.");});
 if(standalone())$("instBtn").hidden=true;
 if("serviceWorker" in navigator&&/github\.io$/.test(location.hostname))navigator.serviceWorker.register("sw.js").catch(()=>{});
-$("instBtn").onclick=async()=>{if(instEvt){const ev=instEvt;instEvt=null;ev.prompt();try{const r=await ev.userChoice;if(r&&r.outcome==="accepted")return;}catch(e){}return;}showInstHelp();};
+$("instBtn").onclick=()=>showInstHelp();
+async function runInstall(){const ev=instEvt;if(!ev){flash("이 화면에서는 바로 설치가 안 돼요. 아래 방법대로 추가해 주세요.");return;}
+  try{await ev.prompt();const r=await ev.userChoice;instEvt=null;if(r&&r.outcome==="accepted"){closeSheet();flash("설치하고 있어요. 잠시 뒤 홈 화면에 셔틀콕 아이콘이 생겨요.");}}
+  catch(e){instEvt=null;flash("설치 창을 띄우지 못했어요. 아래 방법대로 추가해 주세요.");showInstHelp();}}
+document.addEventListener("click",e=>{if(e.target.id==="instGo")runInstall();});
 function showInstHelp(){const ua=navigator.userAgent||"";const kakao=/KAKAOTALK/i.test(ua),ios=/iPhone|iPad|iPod/i.test(ua),samsung=/SamsungBrowser/i.test(ua);
   const S={kakao:`<h3 class="tlh">💬 카카오톡에서 열었다면</h3><p class="note">카카오톡 안에서는 홈 화면 추가가 안 돼요. 오른쪽 아래(또는 위) <b>⋮</b> → <b>다른 브라우저로 열기</b>를 누른 뒤, 열린 크롬에서 이 버튼을 다시 눌러 주세요.</p>`,
     chrome:`<h3 class="tlh">🤖 갤럭시 · 크롬</h3><p class="note">오른쪽 위 <b>⋮</b> → <b>홈 화면에 추가</b>(또는 <b>앱 설치</b>) → <b>설치</b>를 누르세요.</p>`,
     samsung:`<h3 class="tlh">🌐 삼성 인터넷</h3><p class="note">아래쪽 <b>≡</b> → <b>현재 페이지 추가</b> → <b>홈 화면</b>을 누르세요.</p>`,
     ios:`<h3 class="tlh">🍎 아이폰 · Safari</h3><p class="note">아래쪽 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b> → <b>추가</b>를 누르세요. 아이폰은 홈 화면 앱과 Safari의 기록이 따로 저장돼요. 옮길 때는 '백업·불러오기'를 쓰세요.</p>`};
   const order=kakao?["kakao","chrome","ios"]:ios?["ios","kakao"]:samsung?["samsung","chrome","kakao"]:["chrome","samsung","ios","kakao"];
-  openSheet(sheetTop("📲 홈 화면에 추가","셔틀콕 아이콘이 생기고 주소창 없이 앱처럼 열려요")+order.map(k=>S[k]).join("")+
+  openSheet(sheetTop("📲 홈 화면에 추가","셔틀콕 아이콘이 생기고 주소창 없이 앱처럼 열려요")+
+    (instEvt?`<button type="button" class="primary koBtn" id="instGo">📲 지금 바로 설치하기</button><p class="note" style="margin:6px 0 4px">눌러도 설치 창이 안 뜨면 아래 방법대로 해 주세요.</p>`:"")+order.map(k=>S[k]).join("")+
     `<p class="note" style="margin-top:14px">홈 화면 아이콘으로 열어도 지금 쓰던 명단과 기록은 그대로예요. (같은 크롬에서 추가한 경우)</p>`);}
 
 /* ---------- 고정 짝 ---------- */
