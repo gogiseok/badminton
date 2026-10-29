@@ -212,7 +212,9 @@ ul.games span{color:var(--muted);margin-right:8px;font-size:12.5px}
 .tools button{font-size:13px;padding:5px 10px}
 .tools button:disabled{opacity:.45;cursor:default}
 .choices.three{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
-.p{grid-template-columns:auto minmax(0,1fr) auto auto auto auto}
+.p{grid-template-columns:auto minmax(48px,1fr) auto auto auto auto}
+.nw{white-space:nowrap}
+.cnt{display:flex;flex-wrap:wrap;align-items:center;gap:3px 5px;justify-content:flex-end;text-align:right}
 .gbtn{font-size:12.5px;padding:2px 7px;min-width:30px}
 .gbtn.g-m{background:#dbe8f7;border-color:#9bbbe0;color:#1d3f66}
 .gbtn.g-f{background:#f7dde6;border-color:#e0a2b8;color:#6a2340}
@@ -280,6 +282,8 @@ select.lose option{color:#1b2a24;background:#fff}
 .bal{display:block;font-weight:400;font-size:11.5px;letter-spacing:0;opacity:.85}
 .poolBox{grid-column:1/-1;display:flex;flex-direction:column;gap:6px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13.5px}
 .poolBox button{align-self:flex-start;font-size:13px;padding:5px 10px}
+.pmove{border:0;cursor:pointer;min-width:0;line-height:1.5}
+.pline small{display:block;color:var(--muted);font-size:12.5px;margin:1px 0 4px}
 .pchip{font-style:normal;font-size:11.5px;font-weight:700;border-radius:4px;padding:1px 6px;color:#fff;white-space:nowrap}
 .pc0{background:#2f6fb5}.pc1{background:#c4452f}.pc2{background:#7b56b0}
 .ptabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
@@ -349,6 +353,33 @@ select.lose option{color:#1b2a24;background:#fff}
 .settings>select,.settings>input[type=number]{width:100%;min-width:0;max-width:100%}
 #mode{grid-column:1/-1}
 .settings>*{min-width:0}
+.finP{border:2px solid var(--shuttle)}
+.finP h2{margin:0 0 6px}
+.finVs{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;text-align:center;background:var(--bg);border-radius:8px;padding:10px}
+.finVs small{display:block;color:var(--muted);font-size:12px}
+.finVs span{color:var(--shuttle);font-weight:700}
+.finSeg{margin-bottom:10px}
+.perSeg{grid-column:1/-1}
+.hpTag{font-style:normal;font-size:11px;font-weight:700;background:#8a6d1a;color:#fff;border-radius:4px;padding:0 5px;margin-left:3px;vertical-align:middle}
+.perSeg button{font-size:13.5px;padding:8px 4px}
+.rkSel{font-size:13px;padding:5px 6px;margin-left:auto;border-radius:6px}
+.sthd .rkSel+[data-copy]{margin-left:0}
+td.mc small.sub{display:block;font-size:11px;color:var(--muted)}
+.finSeg.n3{grid-template-columns:1fr 1fr 1fr}
+.finSeg.n4{grid-template-columns:1fr 1fr}
+.finSeg button{font-size:13.5px;padding:7px 4px}
+.finQ{margin:6px 0 4px!important;font-size:13.5px}
+.finPv{margin:6px 0 4px}
+.finArrow{text-align:center;margin:2px 0 8px!important}
+.finSeg button{display:flex;flex-direction:column;align-items:center;line-height:1.3}
+.finSeg small{font-weight:400;font-size:12px;opacity:.85}
+.finMs{display:flex;flex-direction:column;gap:10px}
+.finWait{border:2px dashed var(--line);background:var(--bg)}
+.finWait .label{color:var(--muted)}
+.finChamp{background:var(--shuttle);color:#2a2100;border-radius:8px;padding:10px 12px;margin:4px 0 12px;font-size:17px}
+.finChamp span{float:right;font-weight:700}
+.freeR{border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:14.5px;display:flex;flex-direction:column;gap:4px}
+.freeR .vs{color:var(--muted);font-size:12px}
 .fxWrap{grid-column:1/-1;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;min-width:0}
 .fxHd{font-size:13.5px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .fxHd b{color:var(--fg)}
@@ -466,8 +497,9 @@ select.lose option{color:#1b2a24;background:#fff}
         <div id="autoCtl" style="display:contents">
           <label for="poolN">조 나누기</label>
           <select id="poolN"><option value="1">나누지 않음</option><option value="2">2개 조</option><option value="3">3개 조</option></select>
-          <div class="poolBox" id="poolBox" hidden><span id="poolInfo"></span><button type="button" id="poolRand">랜덤으로 다시 나누기</button></div>
-          <label for="rounds">한 회차 게임 수<br><small style="font-size:12px">대진을 한 번 짤 때 만드는 게임 수</small></label><input type="number" id="rounds" min="1" max="20" value="4" inputmode="numeric">
+          <div class="poolBox" id="poolBox" hidden><span id="poolInfo"></span><button type="button" id="poolRand">🎲 랜덤으로 다시 나누기</button></div>
+          <div class="seg perSeg" id="perSeg" role="group" aria-label="게임 수 기준"><button type="button" data-per="1">1인당 게임 수로</button><button type="button" data-per="0">총 게임 수로</button></div>
+          <label for="rounds" id="roundsLbl">한 회차 게임 수<br><small style="font-size:12px">대진을 한 번 짤 때 만드는 게임 수</small></label><input type="number" id="rounds" min="1" max="20" value="4" inputmode="numeric">
           <div class="pv" id="pv"></div>
           <label for="mode">대진 짜는 기준</label>
           <select id="mode"><option value="rotate">파트너·상대 최대한 다르게</option><option value="level">비슷한 실력끼리 한 코트</option><option value="mixed">혼합복식 (남+여)</option></select>
@@ -548,7 +580,7 @@ const LV={5:"S",4:"A",3:"B",2:"C",1:"D"};
 const KEY="bd-draw-v3",GL="ABCD";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const blank=()=>({players:[],rounds:[],cfg:{courts:2,nums:[1,2]},session:null,lg:{teams:[],matches:[],cn:null,day:null},tn:null,gp:null,gk:null,history:[],ui:{fs:0,lv:true},fx:[],fee:{items:[],monthly:0}});
+const blank=()=>({players:[],rounds:[],cfg:{courts:2,nums:[1,2]},session:null,lg:{teams:[],matches:[],cn:null,day:null},tn:null,gp:null,gk:null,history:[],ui:{fs:0,lv:true},fx:[],fee:{items:[],monthly:0},fin:null});
 let st=blank(),bootMsg="",startOpen=false,undoStack=[],lastSaved="";
 const openFolds=new Set();
 
@@ -581,7 +613,7 @@ $("cfm").addEventListener("click",e=>{if(e.target.id==="cfm")cfmClose(false);});
 /* ---------- 개인전 조 나누기 ---------- */
 function renderPoolCtl(){if(isFixed())return;const n=st.pool?st.pool.n:1;$("poolN").value=String(n);$("poolBox").hidden=n<2;
   if(n>1){const pcs=poolCourtsAll();const ok=st.cfg.courts>=n;
-    $("poolInfo").innerHTML=ok?pcs.map((c,i)=>`<b class="pchip pc${i}">${i+1}조</b> ${st.players.filter(p=>p.on&&p.pool===i).length}명 · ${c.map(x=>x+"번").join("·")} 코트`).join("<br>"):`<span style="color:var(--lose)">코트가 조 수보다 적어요. 코트를 ${n}면 이상으로 늘려 주세요.</span>`;}}
+    $("poolInfo").innerHTML=ok?pcs.map((c,i)=>{const ms=st.players.filter(p=>p.on&&p.pool===i);return `<div class="pline"><b class="pchip pc${i}">${i+1}조</b> ${ms.length}명 · ${c.map(x=>x+"번").join("·")} 코트<small>${ms.map(p=>esc(p.name)).join(", ")||"-"}</small></div>`;}).join("")+`<small class="note" style="margin:0">참가자 목록에서 이름 옆 <b>'1조 ⇄'</b>를 누르면 그 사람의 조를 직접 바꿀 수 있어요.${(st.fx||[]).length?" 고정 짝은 함께 움직여요.":""}</small>`:`<span style="color:var(--lose)">코트가 조 수보다 적어요. 코트를 ${n}면 이상으로 늘려 주세요.</span>`;}}
 const grouped=()=>!isFixed()&&!isEvent()&&!!st.pool&&st.pool.n>1;
 function syncPool(){if(st.pool&&st.pool.n>1&&st.pool.cur>=0)st.pool.pr[st.pool.cur]=st.rounds;}
 function reconnectPool(){if(!st.pool)st.pool={n:1,cur:0,pr:[]};const P=st.pool;
@@ -592,9 +624,19 @@ const activeP=()=>st.players.filter(p=>p.on&&(!grouped()||p.pool===st.pool.cur))
 function poolCourtsAll(){const nums=st.cfg.nums.slice(0,st.cfg.courts),n=st.pool.n;const per=Math.floor(nums.length/n),ex=nums.length%n;let s=0;const out=[];
   for(let k=0;k<n;k++){const c=per+(k<ex?1:0);out.push(nums.slice(s,s+c));s+=c;}return out;}
 const poolCourts=i=>poolCourtsAll()[i];
-function assignPools(){const n=st.pool.n;const ps=shuffle(st.players.slice());ps.forEach((p,i)=>p.pool=i%n);}
+function assignPools(){const n=st.pool.n;const seen=new Set(),U=[];shuffle(st.players.slice()).forEach(p=>{if(seen.has(p.id))return;seen.add(p.id);const m=fxPartner(p.id);const q=m&&pOf(m)?[p,pOf(m)]:[p];if(m)seen.add(m);U.push(q);});
+  const cnt=Array(n).fill(0);U.sort((a,b)=>b.length-a.length).forEach(u=>{const on=u.filter(p=>p.on).length;let k=0;for(let i=1;i<n;i++)if(cnt[i]<cnt[k])k=i;u.forEach(p=>p.pool=k);cnt[k]+=on;});}
+async function movePool(pid){const p=pOf(pid);if(!p||!grouped())return;const n=st.pool.n,from=p.pool==null?0:p.pool,to=(from+1)%n;
+  const mates=[p];const m=fxPartner(pid);if(m&&pOf(m))mates.push(pOf(m));const who=mates.map(x=>x.name).join(", ");
+  syncPool();const hasR=st.pool.pr[from].length>0||st.pool.pr[to].length>0;
+  if(hasR&&!await ask(`${who} 님을 ${to+1}조로 옮길까요?`,`${from+1}조의 아직 시작 안 한 게임에서는 다른 사람으로 바뀌고, ${to+1}조에서는 다음 게임부터 들어가요.\n이미 끝난 게임 기록은 그대로 남아요.`,"옮기기"))return;
+  const cur=st.pool.cur;
+  mates.forEach(x=>{if(x.on&&st.pool.pr[from].length){usePool(from);leaveSwap(x.id);st.replanAsk=true;}x.pool=to;if(x.on&&st.pool.pr[to].length){usePool(to);joinFuture(x.id);lateJoin(x.id,false);st.replanAsk=true;}});
+  usePool(cur);save();render();const c=Array(n).fill(0);st.players.forEach(x=>{if(x.on&&x.pool!=null)c[x.pool]++;});
+  flash(`${who} 님을 ${to+1}조로 옮겼어요. (지금 ${c.map((v,i)=>`${i+1}조 ${v}명`).join(" · ")})${hasR?" 조 탭에서 '남은 게임 다시 짜기'를 누르면 바로 반영돼요.":""}`);}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-pmove]");if(b)movePool(b.dataset.pmove);});
 function smallestPool(){const n=st.pool.n,c=Array(n).fill(0);st.players.forEach(p=>{if(p.on&&p.pool!=null&&p.pool<n)c[p.pool]++;});const m=Math.min(...c);const ks=c.map((v,i)=>v===m?i:-1).filter(i=>i>=0);return ks[Math.floor(Math.random()*ks.length)];}
-function clearAuto(){st.rounds.splice(0);if(st.pool&&st.pool.n>1){st.pool.pr.forEach(rs=>rs.splice(0));}st.players.forEach(p=>p.base=0);st.replanAsk=false;st.day=null;}
+function clearAuto(){st.fin=null;st.rounds.splice(0);if(st.pool&&st.pool.n>1){st.pool.pr.forEach(rs=>rs.splice(0));}st.players.forEach(p=>p.base=0);st.replanAsk=false;st.day=null;}
 function normalize(){
   const b=blank();for(const k in b)if(st[k]===undefined)st[k]=b[k];
   if(!st.cfg.nums)st.cfg.nums=[1,2];
@@ -604,6 +646,7 @@ function normalize(){
   if(!st.ui)st.ui={fs:0};if(st.ui.lv===undefined)st.ui.lv=true;
   const ids=new Set(st.players.map(p=>p.id));st.fx=(st.fx||[]).filter(x=>x&&ids.has(x[0])&&ids.has(x[1])&&x[0]!==x[1]);
   if(!st.fee||!Array.isArray(st.fee.items))st.fee={items:[],monthly:0};
+  if(st.fin)st.fin=finNorm(st.fin);if(st.fin===undefined)st.fin=null;
   reconnectPool();}
 function save(){syncPool();const s=JSON.stringify(st);if(s===lastSaved)return;if(lastSaved){undoStack.push(lastSaved);if(undoStack.length>30)undoStack.shift();}
   lastSaved=s;try{localStorage.setItem(KEY,s);}catch(e){}$("undoBtn").disabled=!undoStack.length;}
@@ -613,7 +656,8 @@ function pushHist(e){st.history.unshift(e);st.history=st.history.slice(0,60);}
 function namesOf(ids){const n={};ids.forEach(id=>{if(id)n[id]=nm(id);});return n;}
 function archiveAuto(){const RS=(st.pool&&st.pool.n>1)?(syncPool(),st.pool.pr.flatMap((rs,pi)=>rs.map(r=>Object.assign({},r,{pool:pi})))):st.rounds;
   if(!RS.some(r=>r.scores.some(done)))return false;const ids=new Set();RS.forEach(r=>r.courts.forEach(c=>c.flat().forEach(x=>ids.add(x))));
-  pushHist({kind:"auto",target:target(),date:st.day||today(),names:namesOf([...ids]),rounds:JSON.parse(JSON.stringify(RS)),pools:st.pool&&st.pool.n>1?st.pool.n:0});return true;}
+  const F=finNorm(st.fin);const fin=F&&F.ms.some(m=>done(m.sc))?{mode:F.mode,t:F.t,ms:F.ms,ci:F.ci,lb:F.lb,rest:F.rest||[]}:null;
+  pushHist({kind:"auto",target:target(),date:st.day||today(),names:namesOf([...ids]),rounds:JSON.parse(JSON.stringify(RS)),pools:st.pool&&st.pool.n>1?st.pool.n:0,fin:fin?JSON.parse(JSON.stringify(fin)):null});return true;}
 const teamIds=()=>st.lg.teams.flatMap(t=>[t.a,t.b]);
 function archiveLeague(){if(!st.lg.matches.some(m=>done(m.sc)))return false;
   pushHist({kind:"league",target:target(),date:st.lg.day||today(),names:namesOf(teamIds()),lg:JSON.parse(JSON.stringify(st.lg))});return true;}
@@ -665,14 +709,31 @@ function setScore(sc,ti,raw,quiet){
 /* ---------- 개인전 (자동 편성) ---------- */
 function stats(){const g={},w={},l={},pd={};
   st.players.forEach(p=>{g[p.id]=0;w[p.id]=0;l[p.id]=0;pd[p.id]=0;});
-  st.rounds.forEach(r=>r.courts.forEach((c,ci)=>{c.flat().forEach(id=>{if(id in g)g[id]++;});const sc=r.scores[ci];
-    if(done(sc)){const win=sc[0]>sc[1]?0:1,d=Math.abs(sc[0]-sc[1]);c[win].forEach(id=>{if(id in w){w[id]++;pd[id]+=d;}});c[1-win].forEach(id=>{if(id in l){l[id]++;pd[id]-=d;}});}}));
+  st.rounds.forEach(r=>{const H=r.hp||[];r.courts.forEach((c,ci)=>{c.flat().forEach(id=>{if(id in g&&!H.includes(id))g[id]++;});const sc=r.scores[ci];
+    if(done(sc)){const win=sc[0]>sc[1]?0:1,d=Math.abs(sc[0]-sc[1]);c[win].forEach(id=>{if(id in w&&!H.includes(id)){w[id]++;pd[id]+=d;}});c[1-win].forEach(id=>{if(id in l&&!H.includes(id)){l[id]++;pd[id]-=d;}});}});});
   return {g,w,l,pd};}
-function rec(rounds){const w={},l={},pd={},g={};const z=id=>{if(!(id in g)){g[id]=0;w[id]=0;l[id]=0;pd[id]=0;}};
-  rounds.forEach(r=>r.courts.forEach((c,ci)=>{c.flat().forEach(id=>{z(id);g[id]++;});const sc=r.scores[ci];
-    if(done(sc)){const win=sc[0]>sc[1]?0:1,d=Math.abs(sc[0]-sc[1]);c[win].forEach(id=>{w[id]++;pd[id]+=d;});c[1-win].forEach(id=>{l[id]++;pd[id]-=d;});}}));
-  const rank=Object.keys(g).filter(id=>w[id]+l[id]>0).sort((a,b)=>(rate(w[b],l[b])-rate(w[a],l[a]))||(w[b]-w[a])||(pd[b]-pd[a]));
-  return {w,l,pd,g,rank};}
+const hpOf=r=>r&&r.hp||[];
+const nmH=(r,name=nm)=>id=>name(id)+(hpOf(r).includes(id)?"(도우미)":"");
+/* 순위 기준: pts 다득점(기본) · avg 경기당 평균 득점 · rate 승률 */
+const RKM={pts:{n:"다득점",d:"득점 합계 → 득실 → 승수"},avg:{n:"평균 득점",d:"경기당 평균 득점 → 득실 → 승수"},rate:{n:"승률",d:"승률 → 승수 → 득실"}};
+const rkMode=()=>RKM[st.ui&&st.ui.rk]?st.ui.rk:"pts";
+function rankCmp(R){const m=rkMode();const gm=id=>R.w[id]+R.l[id];const av=id=>gm(id)?R.pf[id]/gm(id):0;
+  if(m==="rate")return (a,b)=>(rate(R.w[b],R.l[b])-rate(R.w[a],R.l[a]))||(R.w[b]-R.w[a])||(R.pd[b]-R.pd[a]);
+  if(m==="avg")return (a,b)=>(av(b)-av(a))||(R.pd[b]-R.pd[a])||(R.w[b]-R.w[a]);
+  return (a,b)=>(R.pf[b]-R.pf[a])||(R.pd[b]-R.pd[a])||(R.w[b]-R.w[a]);}
+const avgTxt=(R,id)=>{const n=R.w[id]+R.l[id];return n?(R.pf[id]/n).toFixed(1):"0";};
+function rec(rounds){const w={},l={},pd={},g={},pf={};const z=id=>{if(!(id in g)){g[id]=0;w[id]=0;l[id]=0;pd[id]=0;pf[id]=0;}};
+  rounds.forEach(r=>{const H=r.hp||[];r.courts.forEach((c,ci)=>{c.flat().forEach(id=>{if(H.includes(id))return;z(id);g[id]++;});const sc=r.scores[ci];
+    if(done(sc)){const win=sc[0]>sc[1]?0:1,d=Math.abs(sc[0]-sc[1]);c[win].forEach(id=>{if(H.includes(id))return;w[id]++;pd[id]+=d;pf[id]+=sc[win];});c[1-win].forEach(id=>{if(H.includes(id))return;l[id]++;pd[id]-=d;pf[id]+=sc[1-win];});}});});
+  const R={w,l,pd,g,pf};R.rank=Object.keys(g).filter(id=>w[id]+l[id]>0).sort(rankCmp(R));
+  return R;}
+function rkNote(R){const gs=R.rank.map(id=>R.w[id]+R.l[id]);const uneq=gs.length&&Math.min(...gs)!==Math.max(...gs);
+  return `<p class="note" style="margin:6px 0 0">${RKM[rkMode()].d} 순으로 정해요.${uneq&&rkMode()==="pts"?` <b style="color:var(--lose)">친 게임 수가 다른 사람이 있어요(${Math.min(...gs)}~${Math.max(...gs)}게임). 공평하게 비교하려면 '평균 득점'으로 바꿔 보세요.</b>`:""}</p>`;}
+const rkSel=()=>`<select class="rkSel" data-rk aria-label="순위 기준">${Object.keys(RKM).map(k=>`<option value="${k}" ${rkMode()===k?"selected":""}>순위: ${RKM[k].n}</option>`).join("")}</select>`;
+const mainCol=(R,id)=>rkMode()==="rate"?`<b>${rate(R.w[id],R.l[id])}%</b>`:rkMode()==="avg"?`<b>${avgTxt(R,id)}</b><small class="sub">${R.pf[id]}점</small>`:`<b>${R.pf[id]}점</b>`;
+const mainHead=()=>rkMode()==="rate"?"승률":rkMode()==="avg"?"평균 득점":"득점";
+const rkLine=(R,id)=>`${R.w[id]}승 ${R.l[id]}패 · 득점 ${R.pf[id]}${rkMode()==="avg"?` (평균 ${avgTxt(R,id)})`:""} · 득실 ${R.pd[id]>0?"+":""}${R.pd[id]}`;
+document.addEventListener("change",e=>{if(e.target.matches("select[data-rk]")){st.ui.rk=e.target.value;save();render();flash(`순위 기준을 '${RKM[rkMode()].n}'으로 바꿨어요.`);}});
 const pk=(a,b)=>a<b?a+"|"+b:b+"|"+a;
 function counts(){const pt={},op={};
   st.rounds.forEach(r=>r.courts.forEach(c=>{c.forEach(t=>{const k=pk(t[0],t[1]);pt[k]=(pt[k]||0)+1;});
@@ -710,9 +771,9 @@ function pickMixed(units,n){const sx=u=>pOf(u[0]).g;const Sm=units.filter(u=>u.l
     if(dm<=nm&&df<=nf&&can(nm-dm,nf-df,rm,rf,rp)){pick.push(u);nm-=dm;nf-=df;}});
   return {pick,k};}
 // 동점 순서를 여러 번 바꿔 짜 보고 파트너·상대 반복이 가장 적은 배치를 고름
-function makeRound(){let best=null;for(let t=0;t<(st.cfg.courts>3?12:30);t++){const r=makeRound1(t%3===0);if(!r)return null;if(!best||r._c<best._c)best=r;}delete best._c;return best;}
-function makeRound1(tb){
-  const {g}=stats();const {pt,op}=counts();const mode=curMode();const pc=grouped()?poolCourts(st.pool.cur):null;const n=pc?pc.length:st.cfg.courts;
+function makeRound(lim){let best=null;for(let t=0;t<(st.cfg.courts>3?12:30);t++){const r=makeRound1(t%3===0,lim);if(!r)return null;if(!best||r._c<best._c)best=r;}delete best._c;return best;}
+function makeRound1(tb,lim){
+  const {g}=stats();const {pt,op}=counts();const mode=curMode();const pc=grouped()?poolCourts(st.pool.cur):null;const nAll=pc?pc.length:st.cfg.courts;const n=lim?Math.min(lim,nAll):nAll;
   const active=activeP();FX=fxMap(active,mode);
   const last=st.rounds[st.rounds.length-1];const restedLast=new Set(last?last.rest:[]);
   const streak={};active.forEach(p=>{let k=0;for(let i=st.rounds.length-1;i>=0;i--){if(st.rounds[i].courts.some(c=>c.flat().includes(p.id)))k++;else break;}streak[p.id]=k;});
@@ -756,7 +817,7 @@ function makeRound1(tb){
     if(ca+cb<cost[a]+cost[b]-0.01){cost[a]=ca;cost[b]=cb;}else sw();}
   const courts=groups.map(q=>bestSplit(q,pt,op,mode==="mixed",mode).o);
   // 같은 게임 수끼리 고를 때 매번 같은 사람들끼리만 묶이지 않게 하되, 두 번 연달아 쉬는 사람은 적게
-  return {_c:cost.reduce((a,b)=>a+b,0)+rest.filter(id=>restedLast.has(id)).length*2,courts,rest,scores:courts.map(()=>[null,null]),cn:pc?pc.slice(0,courts.length):n>1?st.cfg.nums.slice(0,courts.length):null};}
+  return {_c:cost.reduce((a,b)=>a+b,0)+rest.filter(id=>restedLast.has(id)).length*2,courts,rest,scores:courts.map(()=>[null,null]),cn:pc?pc.slice(0,courts.length):nAll>1?st.cfg.nums.slice(0,courts.length):null};}
 const curMode=()=>{const v=$("mode").value;return v==="mix"?"rotate":v;};
 const MODE_NOTE={rotate:"같은 사람과 다시 파트너가 되거나 맞붙는 일이 최대한 없게 짜요. 실력은 두 팀 합이 비슷하도록만 맞춰요.",
   level:"실력이 비슷한 사람끼리 한 코트에 모아요. 그 안에서 파트너·상대 반복은 최대한 피해요.",
@@ -784,7 +845,14 @@ function previewInfo(G){let act=activeP();const s=slotsPerGame(act);if(s<4||!act
   let best=null;for(let k=1;k<=12;k++){const x=run(k);if(Math.max(...x)===Math.min(...x)){best=k;break;}}
   const idle=curMode()==="mixed"?act.filter(p=>p.g!=="m"&&p.g!=="f").length:0;
   return {fxOdd:Object.keys(FXp).length&&(act.length-s)%2===1,n:act.length,s,rest:act.length-s,mn,mx,cntMax:r.filter(v=>v===mx).length,cntMin:r.filter(v=>v===mn).length,best,has,late:act.some(p=>p.base>0),idle};}
-function renderPreview(){const el=$("pv");if(isFixed()||(grouped()&&st.pool.cur<0)){el.innerHTML="";el.hidden=true;return;}el.hidden=false;const G=Math.max(1,+$("rounds").value||1);const P=previewInfo(G);
+function renderPreview(){const el=$("pv");if(isFixed()||(grouped()&&st.pool.cur<0)){el.innerHTML="";el.hidden=true;return;}el.hidden=false;const G=Math.max(1,+$("rounds").value||1);
+  if(perMode()){const pl=perPlan(G);const act=activeP();
+    if(!pl){el.className="pv";el.innerHTML=`<span class="pvTxt">참석자가 4명 이상이면 미리보기가 나와요.</span>`;return;}
+    const head=`${grouped()?(st.pool.cur+1)+"조 · ":""}참석 ${act.length}명 · 코트 ${courtCount()}면 → 한 게임 ${pl.nmax*4}명 출전${act.length-pl.nmax*4?`, ${act.length-pl.nmax*4}명 휴식`:""}`;
+    const what=st.rounds.length?"다음 회차":"";
+    if(pl.ok){el.className="pv ok";el.innerHTML=`<span class="pvTxt">${head}</span><b>✓ ${what?what+": ":""}모두 ${G}게임씩${st.rounds.length?" 더":""}${pl.helpers?` + 도우미 ${pl.helpers}명`:""} → 총 ${pl.list.length}게임</b>`+(pl.helpers?`<span class="pvTxt">🤝 도우미 ${pl.helpers}명이 한 게임 더 쳐서 빈자리를 채워요. 그 게임은 도우미 순위에 넣지 않아요. <button type="button" class="link" data-help="0">도우미 없이</button></span>${pl.alt.length?`<span class="pvTxt">도우미 없이 맞추려면: ${pl.alt.map(x=>`<button type="button" class="link" data-pk="${x}">1인당 ${x}게임</button>`).join(" ")}</span>`:""}`:"")+(pl.rem?`<span class="pvTxt">마지막 게임은 코트 ${pl.rem}면만 써요. (${pl.rem*4}명 출전)</span>`:"")+(Object.keys(fxMap(act,curMode())).length?`<span class="pvTxt">🔗 고정 짝이 있으면 1게임 정도 차이가 날 수 있어요.</span>`:"");}
+    else{el.className="pv warn";el.innerHTML=`<span class="pvTxt">${head}</span><b>${pl.N}명이 1인당 ${G}게임씩 딱 맞게는 짤 수 없어요</b>${pl.alt.map(x=>`<button type="button" class="pvBtn" data-pk="${x}">1인당 ${x}게임으로 하기</button>`).join("")}${pl.helpers?`<button type="button" class="pvBtn" data-help="1">${G}게임 + 도우미 ${pl.helpers}명으로 하기</button>`:""}`;}
+    return;}const P=previewInfo(G);
   if(!P){el.innerHTML=`<span class="pvTxt">참석자가 ${curMode()==="mixed"?"남녀 각각 2명":"4명"} 이상이면 미리보기가 나와요.</span>`;return;}
   const head=`${grouped()?(st.pool.cur+1)+"조 · ":""}참석 ${P.n}명 · 코트 ${courtCount()}면 → 한 게임 ${P.s}명 출전${P.rest?`, ${P.rest}명 휴식`:""}`;
   const what=P.has?`다음 회차(${G}게임)까지 치면`:`${G}게임이면`;
@@ -793,7 +861,7 @@ function renderPreview(){const el=$("pv");if(isFixed()||(grouped()&&st.pool.cur<
   el.innerHTML=`<span class="pvTxt">${head}</span><b>${eq?`✓ ${what} 모두 ${P.has?"누적 ":""}${P.mn}게임씩 쳐요`:`${what} 1인당 ${P.mn}~${P.mx}게임 (${P.mx}게임 ${P.cntMax}명, ${P.mn}게임 ${P.cntMin}명)`}</b>`+
     (P.fxOdd?`<span class="pvTxt">🔗 쉬는 사람이 홀수라 고정 짝이 함께 쉬기 어려워요. 고정 짝이 더 많이 칠 수 있어요.</span>`:"")+(P.late?`<span class="pvTxt">늦게 온 분은 도착한 뒤부터 다른 분들과 같게 맞춰 계산해요.</span>`:"")+(P.idle?`<span class="pvTxt">성별이 정해지지 않은 ${P.idle}명은 혼합복식에 들어가지 않아요.</span>`:"")+
     (!eq&&P.best?`<button type="button" class="pvBtn" data-fit="${P.best}">모두 같게: ${P.best}게임으로 맞추기</button>`:!eq&&!P.fxOdd?`<span class="pvTxt">12게임 안에서는 똑같이 맞출 수 없어요. 차이는 최대 1게임이에요.</span>`:"");}
-function repeatStats(rounds){const pt={},op={},cnt={};const fixK=new Set((st.fx||[]).map(x=>pk(x[0],x[1])));rounds.forEach(r=>r.courts.forEach(c=>{c.forEach(t=>{const k=pk(t[0],t[1]);if(!fixK.has(k))pt[k]=(pt[k]||0)+1;});c[0].forEach(a=>c[1].forEach(b=>{const k=pk(a,b);op[k]=(op[k]||0)+1;}));c.flat().forEach(id=>cnt[id]=(cnt[id]||0)+1);}));
+function repeatStats(rounds){const pt={},op={},cnt={};const fixK=new Set((st.fx||[]).map(x=>pk(x[0],x[1])));rounds.forEach(r=>r.courts.forEach(c=>{c.forEach(t=>{const k=pk(t[0],t[1]);if(!fixK.has(k))pt[k]=(pt[k]||0)+1;});c[0].forEach(a=>c[1].forEach(b=>{const k=pk(a,b);op[k]=(op[k]||0)+1;}));c.flat().forEach(id=>{if(!hpOf(r).includes(id))cnt[id]=(cnt[id]||0)+1;});}));
   const sum=o=>Object.values(o).reduce((a,v)=>a+Math.max(0,v-1),0);const v=Object.values(cnt);return {pr:sum(pt),or:sum(op),mn:v.length?Math.min(...v):0,mx:v.length?Math.max(...v):0};}
 function lateBase(pid){const {g}=stats();const others=activeP().filter(p=>p.id!==pid).map(p=>g[p.id]+(p.base||0));if(!others.length)return 0;
   return Math.max(0,Math.min(...others)-g[pid]);}
@@ -809,15 +877,29 @@ async function replan(){const t=replanTargets();if(!t.length){st.replanAsk=false
   bs.forEach(b=>{const r=makeRound();if(r){r.b=b;st.rounds.push(r);made++;}});st.replanAsk=false;save();render();flash(`${made}게임을 다시 짰어요.`);}
 const batchOf=r=>r.b||0;
 const curBatch=()=>st.rounds.length?batchOf(st.rounds[st.rounds.length-1]):0;
-function addRounds(k,batch){
+/* 1인당 게임 수로 짜기: 모두 같은 수를 치도록 필요한 게임 수와 게임마다 쓸 코트 수를 계산 */
+const perMode=()=>st.cfg.per!==false&&curMode()!=="mixed";
+function perPlan(k){const act=activeP();const N=act.length;const nmax=Math.min(courtCount(),Math.floor(N/4));if(nmax<1)return null;
+  const {g}=stats();const eff=act.map(p=>g[p.id]+(p.base||0));const T0=st.rounds.length?Math.max(...eff):0;
+  const need=kk=>act.reduce((a,p,i)=>a+(T0+kk-eff[i]),0);
+  const mk=(kk,help)=>{const S=need(kk);if(S<=0)return null;const h=(4-S%4)%4;if(h&&!help)return null;if(h>=act.length)return null;const C=(S+h)/4;const list=Array(Math.floor(C/nmax)).fill(nmax);if(C%nmax)list.push(C%nmax);
+    const nd={};act.forEach((p,i)=>nd[p.id]=T0+kk-eff[i]);return {k:kk,list,N,nmax,rem:C%nmax,helpers:h,need:nd};};
+  const alt=[];for(let d=1;d<=4&&alt.length<2;d++){[k-d,k+d].forEach(x=>{if(x>=1&&x<=20&&alt.length<2&&mk(x)&&!alt.includes(x))alt.push(x);});}
+  const p=mk(k,!!st.cfg.help);if(p)return Object.assign(p,{ok:true,alt});const hp=mk(k,true);
+  return {ok:false,k,N,nmax,alt,helpers:hp?hp.helpers:0};}
+function markHelpers(start,pl){if(!pl||!pl.helpers)return [];const seen={},out=[];
+  for(let ri=start;ri<st.rounds.length;ri++){const r=st.rounds[ri];r.courts.flat(2).forEach(id=>{seen[id]=(seen[id]||0)+1;if(pl.need[id]!=null&&seen[id]>pl.need[id]){(r.hp=r.hp||[]).push(id);out.push(id);}});}
+  return out;}
+function addRounds(k,batch,lims,pl){const start=st.rounds.length;
   if(dupCourts()){flash("코트 번호가 겹쳐요. 번호를 고친 뒤 다시 눌러 주세요.");return 0;}
   if(grouped()&&st.cfg.courts<st.pool.n){flash(`코트가 조 수보다 적어요. 코트를 ${st.pool.n}면 이상으로 해 주세요.`);return 0;}
   if(grouped()&&st.pool.cur<0){flash("조 탭을 먼저 골라 주세요.");return 0;}
   if(!st.day)st.day=today();
   const b=batch==null?curBatch():batch;
-  let made=0;for(let i=0;i<k;i++){const r=makeRound();if(!r)break;r.b=b;st.rounds.push(r);made++;}
-  save();render();
+  let made=0;for(let i=0;i<k;i++){const r=makeRound(lims?lims[i]:0);if(!r)break;r.b=b;st.rounds.push(r);made++;}
+  const hps=markHelpers(start,pl);save();render();
   if(made){let m=b>0&&k>1?`${b+1}회차 ${made}게임을 짰어요.`:`${made}게임을 만들었습니다.`;
+    if(lims){const rs=repeatStats(st.rounds);m=(b>0?`${b+1}회차 `:"")+`총 ${made}게임을 짰어요. ${rs.mn===rs.mx?`모두 ${rs.mn}게임씩 쳐요.`:`1인당 ${rs.mn}~${rs.mx}게임이에요.`}`+(lims[lims.length-1]<lims[0]?` 마지막 게임은 코트 ${lims[lims.length-1]}면만 써요.`:"")+(hps.length?` 도우미: ${hps.map(nm).join(", ")} (그 게임은 순위에 안 들어가요)`:"");}
     if(grouped()){syncPool();const empty=st.pool.pr.map((rs,i)=>rs.length?-1:i).filter(i=>i>=0);m=`${st.pool.cur+1}조 `+m+(empty.length?` 위쪽 ${empty.map(i=>i+1+"조").join("·")} 탭을 눌러 대진도 짜 주세요.`:"");}
     flash(m);}
   else flash(curMode()==="mixed"?"혼합복식은 남녀가 각각 2명 이상 있어야 해요. 참가자 성별을 확인해 주세요.":"참석자가 4명 이상이어야 대진을 만들 수 있어요.");
@@ -832,17 +914,22 @@ function leaveSwap(pid){
   if(changed.length||stuck.length)flash([changed.length?`${me.name} 님 대신 ${changed.join(", ")} 님이 들어갑니다.`:"",stuck.length?`${stuck.join("·")}게임은 대신 들어갈 사람이 없어 그대로 두었어요.`:""].filter(Boolean).join(" "));}
 function joinFuture(pid){st.rounds.forEach(r=>{if(!unstarted(r))return;if(!r.courts.some(c=>c.flat().includes(pid))&&!r.rest.includes(pid))r.rest.push(pid);});}
 function poolResultText(){syncPool();const R=rec(allPoolRounds());const d=fmtDate(st.day||today());
-  const L=[`🏸 ${d} 배드민턴 개인전 결과 (${target()}점)`,`${st.pool.n}개 조 · 참석 ${st.players.filter(p=>p.on).length}명`,"","[전체 순위]"];
-  R.rank.forEach((id,i)=>{const p=pOf(id);L.push(`${i+1}. ${nm(id)}(${p&&p.pool!=null?p.pool+1:"-"}조) ${R.w[id]}승 ${R.l[id]}패 (${rate(R.w[id],R.l[id])}%, ${R.pd[id]>0?"+":""}${R.pd[id]})`);});
-  st.pool.pr.forEach((rs,pi)=>{const r=rec(rs);if(!r.rank.length)return;L.push("",`[${pi+1}조 순위]`);r.rank.forEach((id,i)=>L.push(`${i+1}. ${nm(id)} ${r.w[id]}승 ${r.l[id]}패`));});
+  const L=[`🏸 ${d} 배드민턴 개인전 결과 (${target()}점)`,`${st.pool.n}개 조 · 참석 ${st.players.filter(p=>p.on).length}명`];
+  if(st.fin)L.push("",`[🏆 ${finTitle(st.fin)}]`,...finLines(st.fin,nm,true));
+  L.push("",`[전체 순위 · ${RKM[rkMode()].n}]`);
+  R.rank.forEach((id,i)=>{const p=pOf(id);L.push(`${i+1}. ${nm(id)}(${p&&p.pool!=null?p.pool+1:"-"}조) ${rkLine(R,id)}`);});
+  st.pool.pr.forEach((rs,pi)=>{const r=rec(rs);if(!r.rank.length)return;L.push("",`[${pi+1}조 순위]`);r.rank.forEach((id,i)=>L.push(`${i+1}. ${nm(id)} ${rkLine(r,id)}`));});
   return L.concat(FOOT).join("\n");}
-function resultText(rounds,name,date,tgt,sub){
-  const {w,l,pd,rank}=rec(rounds);const people=new Set(rounds.flatMap(r=>r.courts.flatMap(c=>c.flat())));
-  const lines=[`🏸 ${fmtDate(date)} 배드민턴${sub?" "+sub:""} 결과${tgt?` (${tgt}점)`:""}`,`${rounds.length}게임 · ${people.size}명 참여`,"","[순위]"];
-  rank.forEach((id,i)=>lines.push(`${i+1}. ${name(id)} ${w[id]}승 ${l[id]}패 (${rate(w[id],l[id])}%, ${pd[id]>0?"+":""}${pd[id]})`));
+function resultText(rounds,name,date,tgt,sub,fin){
+  const RR=rec(rounds);const {w,l,pd,rank}=RR;const people=new Set(rounds.flatMap(r=>r.courts.flatMap(c=>c.flat())));
+  const lines=[`🏸 ${fmtDate(date)} 배드민턴${sub?" "+sub:""} 결과${tgt?` (${tgt}점)`:""}`,`${rounds.length}게임 · ${people.size}명 참여`];
+  if(fin)lines.push("",`[🏆 ${finTitle(fin)}]`,...finLines(fin,name));
+  lines.push("","[순위]");
+  lines.push(`(순위 기준: ${RKM[rkMode()].n})`);rank.forEach((id,i)=>lines.push(`${i+1}. ${name(id)} ${rkLine(RR,id)}`));
   lines.push("","[게임 결과]");
   rounds.forEach((r,ri)=>r.courts.forEach((c,ci)=>{const sc=r.scores[ci];if(!done(sc))return;
-    lines.push(`${ri+1}게임 ${courtName(r,ci)}: ${c[0].map(name).join("·")} ${sc[0]}:${sc[1]} ${c[1].map(name).join("·")}`);}));
+    lines.push(`${ri+1}게임 ${courtName(r,ci)}: ${c[0].map(nmH(r,name)).join("·")} ${sc[0]}:${sc[1]} ${c[1].map(nmH(r,name)).join("·")}`);}));
+  if(rounds.some(r=>hpOf(r).length))lines.push("","(도우미) 표시 경기는 그 사람 순위에 넣지 않았어요.");
   return lines.concat(["","기석 배드민턴 매치메이커","https://gogiseok.github.io/badminton/"]).join("\n");}
 
 /* ---------- 팀 (파트너 고정 공통) ---------- */
@@ -951,7 +1038,7 @@ function groupText(gp,gk,teams,name,date,tgt){const tnm=tid=>tName(teams.find(x=
 /* ---------- 누적 개인 전적 ---------- */
 function gamesOf(kind,data,teams){const out=[];const mem=tid=>{const t=teams&&teams.find(x=>x.id===tid);return t?tMembers(t):[];};
   if(kind==="event")data.ev.rounds.forEach(r=>r.courts.forEach((c,ci)=>out.push({a:c[0],b:c[1],sc:r.scores[ci]})));
-  if(kind==="auto")data.rounds.forEach(r=>r.courts.forEach((c,ci)=>out.push({a:c[0],b:c[1],sc:r.scores[ci]})));
+  if(kind==="auto"){data.rounds.forEach(r=>r.courts.forEach((c,ci)=>out.push({a:c[0].filter(id=>!hpOf(r).includes(id)),b:c[1].filter(id=>!hpOf(r).includes(id)),sc:r.scores[ci]})));const F=finNorm(data.fin);if(F)F.ms.forEach((m,i)=>{const [a,b]=finTeamsOf(F,i);if(a!=null&&b!=null)out.push({a:F.t[a],b:F.t[b],sc:m.sc});});}
   if(kind==="league")data.lg.matches.forEach(m=>out.push({a:mem(m.t[0]),b:mem(m.t[1]),sc:m.sc}));
   const fromTn=tn=>tn&&tn.rounds.flat().forEach(m=>{if(playable(m))out.push({a:mem(m.t[0]),b:mem(m.t[1]),sc:m.sc});});
   if(kind==="tour")fromTn(data.tn);
@@ -965,7 +1052,7 @@ function cumulative(period){
     gm[win].forEach(id=>S[id].w++);gm[win==="a"?"b":"a"].forEach(id=>S[id].l++);});};
   st.history.forEach(e=>add(e.date,gamesOf(e.kind||"auto",e,e.teams||(e.lg&&e.lg.teams)),e.names));
   const T=today();const live=st.players.reduce((o,p)=>(o[p.id]=p.name,o),{});
-  {const RS=allPoolRounds();if(RS.length)add(st.day||T,gamesOf("auto",{rounds:RS}),live);}
+  {const RS=allPoolRounds();if(RS.length)add(st.day||T,gamesOf("auto",{rounds:RS,fin:st.fin}),live);}
   if(st.lg.matches.length)add(st.lg.day||T,gamesOf("league",st,st.lg.teams),live);
   if(st.tn)add(st.tn.day||T,gamesOf("tour",st,st.lg.teams),live);
   if(st.gp)add(st.gp.day||T,gamesOf("group",st,st.lg.teams),live);
@@ -1003,17 +1090,17 @@ function render(){
     ${pbtn(p.id)}
     <button type="button" class="gbtn g-${p.g||"n"}" data-gen="${p.id}" title="성별 (혼합복식용)" aria-label="${esc(p.name)} 성별">${p.g==="m"?"남":p.g==="f"?"여":"–"}</button>
     <select class="lv" data-lv="${p.id}" aria-label="${esc(p.name)} 실력">${[5,4,3,2,1].map(v=>`<option value="${v}" ${v===p.lv?"selected":""}>${LV[v]}조</option>`).join("")}</select>
-    ${grouped()&&p.pool!=null?`<span class="pchip pc${p.pool}">${p.pool+1}조</span>`:""}${ev?`<button type="button" class="gbtn" data-age="${p.id}" title="연령대">${p.age?AGE[p.age]:"연령"}</button>`:""}<span class="cnt">${ev?`<select class="evt" data-evt="${p.id}" aria-label="${esc(p.name)} 팀"><option value="">팀 –</option>${EVT.slice(0,st.ev.n).map((t,i)=>`<option value="${i}" ${p.et===i?"selected":""}>${t.n}</option>`).join("")}</select>`:fx?(teamOfP(p.id)?tIdx(teamOfP(p.id).id)+"팀":(p.on?"짝 없음":"")):`${fxPartner(p.id)?`<span class="fxMark" title="고정 짝: ${esc(nm(fxPartner(p.id)))}">🔗</span>`:""}${g[p.id]}게임 ${w[p.id]}승${l[p.id]}패`}</span>
+    ${ev?`<button type="button" class="gbtn" data-age="${p.id}" title="연령대">${p.age?AGE[p.age]:"연령"}</button>`:""}<span class="cnt">${grouped()&&p.pool!=null?`<button type="button" class="pchip pmove pc${p.pool}" data-pmove="${p.id}" title="눌러서 조 바꾸기" aria-label="${esc(p.name)} ${p.pool+1}조, 눌러서 조 바꾸기">${p.pool+1}조 ⇄</button>`:""}${ev?`<select class="evt" data-evt="${p.id}" aria-label="${esc(p.name)} 팀"><option value="">팀 –</option>${EVT.slice(0,st.ev.n).map((t,i)=>`<option value="${i}" ${p.et===i?"selected":""}>${t.n}</option>`).join("")}</select>`:fx?(teamOfP(p.id)?tIdx(teamOfP(p.id).id)+"팀":(p.on?"짝 없음":"")):`${fxPartner(p.id)?`<span class="fxMark" title="고정 짝: ${esc(nm(fxPartner(p.id)))}">🔗</span>`:""}<span class="nw">${g[p.id]}게임 ${w[p.id]}승${l[p.id]}패</span>`}</span>
     <button class="x" data-del="${p.id}" aria-label="${esc(p.name)} 삭제">✕</button></li>`).join("")
     :`<li class="listEmpty">아직 참가자가 없어요.<br>위 칸에 이름을 입력하고 <b>추가</b>를 누르세요.</li>`;
   const on=st.players.filter(p=>p.on),m=on.filter(p=>p.g==="m").length,f=on.filter(p=>p.g==="f").length;
   $("summary").textContent=`전체 ${st.players.length}명 · 참석 ${on.length}명${m||f?` (남 ${m} · 여 ${f})`:""}`+(ev?"":fx?` · ${validTeams().length}팀`:"");
   if(ev){renderEvTeams();renderEvent();}else if(fx){renderTeams();({league:renderLeague,tour:renderTour,group:renderGroup})[fmt()]();}else renderAuto();
   $("shareBtn").hidden=ev?!st.ev.rounds.length:fx?!hasSched():!(grouped()&&st.pool.cur<0?allPoolRounds().length:st.rounds.length);$("imgBtn").hidden=$("shareBtn").hidden;
-  renderPreview();renderFx();$("modeNote").textContent=MODE_NOTE[curMode()]||"";
+  syncPer();renderPreview();renderFx();$("modeNote").textContent=MODE_NOTE[curMode()]||"";
   const has=st.rounds.length>0,N=Math.max(1,+$("rounds").value||1);
   $("gen").textContent=has?"처음부터 다시 짜기":"대진 생성";$("gen").classList.toggle("primary",!has);
-  $("nextB").hidden=!has;$("more").hidden=!has;$("autoBtns").hidden=isFixed()||isEvent()||(grouped()&&st.pool.cur<0);$("nextB").textContent=`＋ 다음 회차 짜기 (${N}게임)`;$("nextB").classList.toggle("primary",has);
+  $("nextB").hidden=!has;$("more").hidden=!has;$("autoBtns").hidden=isFixed()||isEvent()||(grouped()&&st.pool.cur<0);$("nextB").textContent=perMode()?`＋ 다음 회차 짜기 (1인당 ${N}게임)`:`＋ 다음 회차 짜기 (${N}게임)`;$("nextB").classList.toggle("primary",has);
 }
 const foldAttr=k=>openFolds.has(k)?" open":"";
 document.addEventListener("toggle",e=>{const d=e.target;if(d.dataset&&d.dataset.fold){if(d.open)openFolds.add(d.dataset.fold);else openFolds.delete(d.dataset.fold);}},true);
@@ -1026,12 +1113,123 @@ function renderOverall(){const out=$("rounds-out");syncPool();const RS=allPoolRo
   const per=st.pool.pr.map((rs,i)=>{const t=rs.reduce((a,r)=>a+r.courts.length,0),f=rs.reduce((a,r)=>a+r.scores.filter(done).length,0);return `${i+1}조 ${rs.length}게임(${f}/${t})`;}).join(" · ");
   $("tbInfo").textContent=`전체 · ${per}`;$("restart").disabled=!RS.length;
   const leaders=st.pool.pr.map((rs,i)=>{const r=rec(rs);return r.rank.length?`<span><b class="pchip pc${i}">${i+1}조 1위</b> ${pbtn(r.rank[0])} ${r.w[r.rank[0]]}승 ${r.l[r.rank[0]]}패</span>`:"";}).filter(Boolean).join("");
-  out.innerHTML=poolTabs()+(R.rank.length?`<div class="panel standings"><div class="sthd"><h2>전체 순위</h2><button type="button" class="copyBtn" data-copy="all">📤 결과 공유</button><button type="button" class="copyBtn" data-img="all" aria-label="이미지로 공유">🖼</button></div>
+  const fp=finPanel();const finTop=st.fin||!!finBuild().F;
+  out.innerHTML=poolTabs()+(finTop?fp:"")+(R.rank.length?`<div class="panel standings"><div class="sthd"><h2>전체 순위</h2>${rkSel()}<button type="button" class="copyBtn" data-copy="all">📤 결과 공유</button><button type="button" class="copyBtn" data-img="all" aria-label="이미지로 공유">🖼</button></div>
     ${leaders?`<div class="leaders">${leaders}</div>`:""}
-    <div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>조</th><th>게임</th><th>승</th><th>패</th><th>득실</th><th>승률</th></tr></thead><tbody>
-    ${R.rank.map((id,i)=>{const r=rate(R.w[id],R.l[id]);const pl=pOf(id);return `<tr><td>${i+1}</td><td class="tn">${pbtn(id)}</td><td>${pl&&pl.pool!=null?pl.pool+1:"-"}</td><td>${R.w[id]+R.l[id]}</td><td>${R.w[id]}</td><td>${R.l[id]}</td><td>${R.pd[id]>0?"+":""}${R.pd[id]}</td><td><b>${r}%</b></td></tr>`;}).join("")}</tbody></table></div>
-    <p class="note">각 조에서 친 경기를 합쳐 승률 → 승수 → 득실 순으로 정해요. 이름을 누르면 그 조 화면으로 이동해요.</p></div>`
-    :`<div class="empty">아직 점수가 입력된 경기가 없어요.<br>위에서 조를 골라 대진을 짜고 경기를 시작하세요.</div>`);}
+    <div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>조</th><th>게임</th><th>승</th><th>패</th><th>득실</th><th>${mainHead()}</th></tr></thead><tbody>
+    ${R.rank.map((id,i)=>{const pl=pOf(id);return `<tr><td>${i+1}</td><td class="tn">${pbtn(id)}</td><td>${pl&&pl.pool!=null?pl.pool+1:"-"}</td><td>${R.w[id]+R.l[id]}</td><td>${R.w[id]}</td><td>${R.l[id]}</td><td>${R.pd[id]>0?"+":""}${R.pd[id]}</td><td class="mc">${mainCol(R,id)}</td></tr>`;}).join("")}</tbody></table></div>
+    ${rkNote(R)}<p class="note" style="margin:2px 0 0">각 조 순위(본선 팀)는 조 탭의 순위와 같아요. 이름을 누르면 그 조 화면으로 이동해요.</p></div>`
+    :`<div class="empty">아직 점수가 입력된 경기가 없어요.<br>위에서 조를 골라 대진을 짜고 경기를 시작하세요.</div>`)+(finTop?"":fp);}
+/* ---------- 조별 개인전 본선 ----------
+   방식: final(결승만) · semi(4강 토너먼트) · all(전원 순위전)
+   팀: same(같은 순위끼리) · cross(교차: 1조 1위+2조 2위) */
+const RK=["1위","2위","3위","4위","5위","6위","7위","8위"];
+function finNorm(f){if(!f)return null;if(f.ms)return f;return {mode:"final",t:f.t,ms:[{a:0,b:1,sc:f.sc||[null,null],lbl:"결승"}],free:f.free||[],cn:f.cn||null};}
+function finTeamsOf(F,i){const m=F.ms[i];if(m.src)return m.src.map(x=>finSrcTeam(F,x));if(F.mode==="semi"&&i>=2){const r=k=>{const x=F.ms[k];if(!done(x.sc))return null;const w=x.sc[0]>x.sc[1];return i===2?(w?x.a:x.b):(w?x.b:x.a);};return [r(0),r(1)];}return [m.a,m.b];}
+const finCi=F=>F.ci!=null?F.ci:F.mode==="semi"?2:F.ms.length-1;
+function finChamp(F){const i=finCi(F),m=F.ms[i];if(!done(m.sc))return null;const [a,b]=finTeamsOf(F,i);return m.sc[0]>m.sc[1]?a:b;}
+const finTitle=F=>F.mode==="semi"?"본선 토너먼트":F.mode==="tour"?"전원 토너먼트":F.mode==="all"?"순위 결정전":"결승전";
+const finLb=(F,k)=>F.lb?F.lb[k]:RK[k]+" 팀";
+function finCn(F,i){const nums=st.cfg.courts>1?st.cfg.nums.slice(0,st.cfg.courts):null;if(!nums)return null;
+  if(F.mode==="semi")return i===1||i===3?nums[1]:nums[0];if(F.mode==="tour")return nums[(F.ms[i].k||0)%nums.length];if(F.mode==="all")return nums[i%nums.length];return nums[0];}
+function finLines(F,name,withCourt){F=finNorm(F);const out=[];const tn=k=>k==null?"?":F.t[k].map(name).join("·");
+  F.ms.forEach((m,i)=>{const [a,b]=finTeamsOf(F,i);if(a==null||b==null){out.push(`${m.lbl}: 4강 결과를 기다리는 중`);return;}const cn=withCourt?finCn(F,i):null;
+    out.push(`${m.lbl}${cn?` (${cn}번 코트)`:""}: ${tn(a)} ${done(m.sc)?m.sc[0]+":"+m.sc[1]:"vs"} ${tn(b)}`);});
+  if(F.rest&&F.rest.length)out.push(`쉬는 사람: ${F.rest.map(name).join(", ")}`);
+  const ch=finChamp(F);if(ch!=null)out.push(`→ 🏆 우승 ${tn(ch)}`);return out;}
+function poolOrder(i){const r=rec(st.pool.pr[i]||[]);const on=st.players.filter(p=>p.on&&p.pool===i).map(p=>p.id);return r.rank.filter(id=>on.includes(id)).concat(on.filter(id=>!r.rank.includes(id)));}
+const finOpt=()=>{const mode=["final","semi","all","tour"].includes(st.ui.finMode)?st.ui.finMode:"final";const pair=st.ui.finPair==="cross"?"cross":"same";return {mode,pair,free:st.ui.finFree!==false};};
+// 팀과 경기 만들기
+function finBuild(){if(!grouped()||st.pool.n!==2)return {err:"2개 조일 때만 만들 수 있어요."};syncPool();
+  const o=finOpt();const g=[poolOrder(0),poolOrder(1)];const ranked=[0,1].map(i=>rec(st.pool.pr[i]||[]).rank.length);
+  const need=o.mode==="final"?2:o.mode==="semi"?4:2;
+  if(ranked[0]<need||ranked[1]<need)return {err:o.mode==="semi"?"각 조에서 4명 이상 점수가 기록되면 4강 대진을 만들 수 있어요. (조마다 4명 이상 필요)":"각 조에서 2명 이상 점수가 기록되면 만들 수 있어요."};
+  const N=o.mode==="final"?2:o.mode==="semi"?4:Math.min(g[0].length,g[1].length);
+  if(o.mode==="tour"&&N<3)return {err:"전원 토너먼트는 조마다 3명 이상 있어야 해요."};
+  const t=[],lb=[];
+  for(let k=0;k<N;k++){if(o.pair==="cross"&&!(o.mode==="all"&&N%2===1&&k===N-1)){const p=k%2===0?k+1:k-1;
+      if(k%2===0){t.push([g[0][k],g[1][p]]);lb.push(`1조${k+1}위+2조${p+1}위`);}else{t.push([g[1][p],g[0][k]]);lb.push(`2조${p+1}위+1조${k+1}위`);}}
+    else{t.push([g[0][k],g[1][k]]);lb.push(`${RK[k]} 팀`);}}
+  let ms,ci;const S=(a,b,lbl)=>({a,b,sc:[null,null],lbl});
+  if(o.mode==="final"){ms=[S(0,1,"결승")];ci=0;}
+  else if(o.mode==="semi"){ms=[S(0,3,"4강 ①"),S(1,2,"4강 ②"),S(null,null,"결승"),S(null,null,"3·4위전")];ci=2;}
+  else if(o.mode==="tour"){ms=tourMs(N);ci=ms.length-1;}
+  else{ms=[];for(let k=0;k+1<N;k+=2)ms.push(S(k,k+1,k===0?"결승 (1·2위전)":`${k+1}·${k+2}위전`));ci=0;}
+  const used=new Set(t.flat());const rest=[...g[0],...g[1]].filter(id=>!used.has(id));
+  if(o.mode==="all"&&N%2===1)t[N-1].forEach(id=>rest.push(id));
+  return {F:{mode:o.mode,pair:o.pair,t,lb,ms,ci,free:[],noFree:!o.free,rest:o.mode==="all"||o.mode==="tour"?rest:[]},rest,
+    left:st.pool.pr.slice(0,2).reduce((a,rs)=>a+rs.reduce((x,r)=>x+r.scores.filter(sc=>!done(sc)).length,0),0)};}
+// 시드 순서 (8칸: 1,8,4,5,2,7,3,6) — 1위는 꼴찌, 2위는 꼴찌 바로 위와 붙고, 칸이 남으면 상위 팀 부전승
+function seedOrder(P){let o=[1];while(o.length<P){const n=o.length*2;o=o.flatMap(x=>[x,n+1-x]);}return o;}
+function tourMs(N){let P=1;while(P<N)P*=2;let cur=seedOrder(P).map(x=>x<=N?{t:x-1}:null);const ms=[];
+  while(cur.length>1){const nx=[],rm=[];for(let k=0;k<cur.length;k+=2){const a=cur[k],b=cur[k+1];if(a&&b){rm.push(ms.length);ms.push({src:[a,b],sc:[null,null]});nx.push({m:ms.length-1});}else nx.push(a||b);}
+    const nm2=cur.length===2?"결승":rm.length<cur.length/2?"1라운드":cur.length===4?"4강":cur.length===8?"8강":"16강";const circ="①②③④⑤⑥⑦⑧";
+    rm.forEach((mi,q)=>{ms[mi].lbl=nm2==="결승"?"결승":`${nm2} ${rm.length>1?circ[q]:""}`.trim();ms[mi].k=q;});cur=nx;}
+  return ms;}
+function finSrcTeam(F,x){if(x.t!=null)return x.t;const m=F.ms[x.m];if(!done(m.sc))return null;const [a,b]=finTeamsOf(F,x.m);return m.sc[0]>m.sc[1]?a:b;}
+function finSrcTxt(F,x){return x.t!=null?F.lb[x.t]:`${F.ms[x.m].lbl} 승자`;}
+function finTeam(mi,side,ti,isWin){const F=st.fin,sc=F.ms[mi].sc,pend=scWinner(sc)===side&&!done(sc);const t=F.t[ti];
+  return `<div class="team ${isWin||pend?"win":""}"><span class="names">${isWin?'<i class="wb">승</i>':""}<span class="tlabel">${esc(finLb(F,ti).replace(" 팀",""))}</span>${t.map(id=>pbtn(id)+lvb(id)).join("<span class=dot>·</span>")}</span><span class="sctl">${scoreCtl(sc,side,`data-k="fin" data-m="${mi}"`,F.ms[mi].lbl)}</span></div>`;}
+function finBusy(F){const ids=new Set();
+  if(F.mode==="tour"){if(finChamp(F)!=null)return ids;const out=new Set();F.ms.forEach((m,i)=>{if(!done(m.sc))return;const [a,b]=finTeamsOf(F,i);out.add(m.sc[0]>m.sc[1]?b:a);});F.t.forEach((t,k)=>{if(!out.has(k))t.forEach(x=>ids.add(x));});return ids;}F.ms.forEach((m,i)=>{if(done(m.sc))return;finTeamsOf(F,i).forEach(k=>{if(k!=null)F.t[k].forEach(x=>ids.add(x));});});
+  if(F.mode==="semi"&&finTeamsOf(F,2).some(k=>k==null))[0,1].forEach(i=>[F.ms[i].a,F.ms[i].b].forEach(k=>F.t[k].forEach(x=>ids.add(x))));
+  return ids;}
+const segBtns=(key,cur,opts)=>`<div class="seg finSeg n${opts.length}" role="group">${opts.map(([v,l,sm])=>`<button type="button" data-fo="${key}" data-v="${v}" class="${cur===v?"on":""}">${l}${sm?`<small>${sm}</small>`:""}</button>`).join("")}</div>`;
+function finPanel(){if(!grouped())return "";
+  if(st.pool.n!==2)return `<div class="panel finP"><h2>🏆 본선</h2><p class="note" style="margin:0">본선은 2개 조로 나눴을 때 만들 수 있어요.</p></div>`;
+  if(!st.fin){const o=finOpt();const B=finBuild();
+    let pv="";
+    if(B.F){const F=B.F;const tn=k=>F.t[k].map(id=>esc(nm(id))).join(" · ");
+      const byes=F.mode==="tour"?F.t.map((_,k)=>k).filter(k=>!F.ms.some(m=>m.src.some(x=>x.t===k)&&m.src.every(x=>x.t!=null))):[];
+      pv=F.mode==="tour"?F.ms.map(m=>m.src.every(x=>x.t!=null)?`<div class="finVs"><div><small>${esc(F.lb[m.src[0].t])}</small><b>${tn(m.src[0].t)}</b></div><span>vs</span><div><small>${esc(F.lb[m.src[1].t])}</small><b>${tn(m.src[1].t)}</b></div></div><p class="note finArrow">${m.lbl}</p>`
+          :`<p class="note finArrow">${m.lbl}: ${m.src.map(x=>esc(finSrcTxt(F,x))).join(" vs ")}</p>`).join("")+(byes.length?`<p class="note" style="margin:4px 0">부전승: ${byes.map(k=>`${esc(F.lb[k])} ${tn(k)}`).join(", ")}</p>`:"")
+        :F.ms.map(m=>m.a==null?`<p class="note finArrow">→ ${m.lbl}: ${m.lbl==="결승"?"4강 이긴 팀끼리":"4강 진 팀끼리"}</p>`
+        :`<div class="finVs"><div><small>${esc(F.lb[m.a])}</small><b>${tn(m.a)}</b></div><span>vs</span><div><small>${esc(F.lb[m.b])}</small><b>${tn(m.b)}</b></div></div><p class="note finArrow">${m.lbl}</p>`).join("")+
+        (B.rest.length?`<p class="note" style="margin:4px 0">${o.mode==="all"||o.mode==="tour"?"이번엔 쉬는 사람":"본선에 안 나가는 사람"}: ${B.rest.map(id=>esc(nm(id))).join(", ")}</p>`:"")+
+        (B.left?`<p class="note" style="margin:4px 0;color:var(--lose)">아직 점수를 안 넣은 조별 경기가 ${B.left}개 있어요. 지금 순위 기준이에요.</p>`:`<p class="note" style="margin:4px 0">조별 순위(승률 → 승수 → 득실) 기준이에요.</p>`);}
+    return `<div class="panel finP"><h2>🏆 본선</h2><p class="note" style="margin:0 0 10px">조별 개인전 순위로 1조·2조 사람을 한 팀씩 묶어 본선을 해요.</p>
+      <p class="q finQ">① 방식</p>${segBtns("mode",o.mode,[["final","결승만","1·2위 팀"],["semi","4강 토너먼트","1~4위 팀"],["tour","전원 토너먼트","1위 vs 꼴찌 시드"],["all","전원 순위전","1·2위전, 3·4위전…"]])}
+      <p class="q finQ">② 팀 짜기</p>${segBtns("pair",o.pair,[["same","같은 순위끼리","1조 1위+2조 1위"],["cross","교차","1조 1위+2조 2위"]])}
+      ${`<p class="q finQ">③ ${o.mode==="all"||o.mode==="tour"?"경기 없는 사람 (탈락·대기)":"본선에 안 나가는 사람"}</p>${segBtns("free",o.free?"y":"n",[["y","자유게임 하기","빈 코트에서"],["n","다 같이 관전","자유게임 없음"]])}`}
+      <div class="finPv">${B.F?pv:`<p class="note" style="margin:0">${B.err}</p>`}</div>
+      ${B.F?`<button type="button" class="primary koBtn" id="finMake">🏆 ${o.mode==="semi"?"4강 토너먼트":o.mode==="tour"?"전원 토너먼트":o.mode==="all"?"순위 결정전":"결승전"} 만들기</button>`:""}</div>`;}
+  const F=st.fin,ch=finChamp(F);const busy=finBusy(F);const others=st.players.filter(p=>p.on&&!busy.has(p.id));
+  const mcard=i=>{const m=F.ms[i];const [a,b]=finTeamsOf(F,i);const cn=finCn(F,i);
+    if(a==null||b==null)return `<div class="court finWait"><div class="label"><span>${m.lbl}${cn?" · "+cn+"번 코트":""}</span><i>대기</i></div><p class="note" style="margin:8px 4px">${m.src?m.src.map((x,q)=>{const k=[a,b][q];return k!=null?`${esc(F.lb[k])} ${F.t[k].map(id=>esc(nm(id))).join("·")}`:esc(finSrcTxt(F,x));}).join(" vs "):`4강 ①·② ${m.lbl==="결승"?"이긴":"진"} 팀끼리 해요.`}</p></div>`;
+    const f=done(m.sc),win=f?(m.sc[0]>m.sc[1]?0:1):-1,iss=scoreIssue(m.sc,target());
+    return `<div class="court"><div class="label"><span>${m.lbl} · ${cn?cn+"번 코트":"코트"}</span><i>${iss?'<b class="warnTag">⚠ 점수 확인</b>':f?"종료":"진행 전"}</i></div><div class="box">${finTeam(i,0,a,win===0)}<div class="net"></div>${finTeam(i,1,b,win===1)}</div></div>`;};
+  const free=(F.free||[]).map((r,ri)=>`<div class="freeR"><b>자유 ${ri+1}게임</b>${r.courts.map((c,ci)=>`<div>${r.cn[ci]!=null?r.cn[ci]+"번 코트":"코트"}: ${c[0].map(pbtn).join("·")} <span class="vs">vs</span> ${c[1].map(pbtn).join("·")}</div>`).join("")}${r.rest.length?`<div class="note" style="margin:0">휴식: ${r.rest.map(id=>esc(nm(id))).join(", ")}</div>`:""}</div>`).reverse().join("");
+  const order=F.mode==="semi"?[0,1,2,3]:F.ms.map((_,i)=>i);
+  const multi=F.mode==="all"&&st.cfg.courts>1&&F.ms.length>st.cfg.courts;
+  return `<div class="panel finP"><div class="sthd"><h2>🏆 ${finTitle(F)}</h2><button type="button" class="link" id="finDel">본선 다시 정하기</button></div>
+    ${ch!=null?`<div class="finChamp">🏆 우승 <b>${F.t[ch].map(id=>esc(nm(id))).join(" · ")}</b> <span>${Math.max(...F.ms[finCi(F)].sc)}:${Math.min(...F.ms[finCi(F)].sc)}</span></div>`:""}
+    ${multi?`<p class="note" style="margin:0 0 8px">경기가 코트보다 많아요. 같은 코트 경기는 위에서부터 순서대로 하세요.</p>`:""}
+    <div class="finMs">${order.map(i=>mcard(i)).join("")}</div>
+    ${F.rest&&F.rest.length?`<p class="note" style="margin:8px 0 0">이번엔 쉬는 사람: ${F.rest.map(id=>esc(nm(id))).join(", ")}</p>`:""}
+    ${F.noFree?"":`<h3 class="tlh" style="margin-top:16px">자유게임 · 지금 칠 수 있는 ${others.length}명</h3>
+    <p class="note" style="margin:0 0 8px">자유게임은 점수를 기록하지 않아요. 누를 때마다 덜 친 사람 먼저, 새 파트너로 한 게임씩 짜요.</p>
+    <div class="row"><button type="button" id="freeMake">＋ 자유게임 짜기</button>${(F.free||[]).length?`<button type="button" class="link" id="freeClr">자유게임 지우기</button>`:""}</div>
+    ${free}`}</div>`;}
+function freeCourts(){const F=st.fin;const nums=st.cfg.nums.slice(0,st.cfg.courts);const used=new Set();
+  F.ms.forEach((m,i)=>{if(done(m.sc))return;used.add(st.cfg.courts>1?finCn(F,i):null);});
+  if(st.cfg.courts>1)return nums.filter(x=>!used.has(x));return used.size?[]:[null];}
+function makeFree(){const F=st.fin;const busy=finBusy(F);const cnt={};F.free.forEach(r=>r.courts.flat(2).forEach(id=>cnt[id]=(cnt[id]||0)+1));
+  const ps=shuffle(st.players.filter(p=>p.on&&!busy.has(p.id))).sort((a,b)=>(cnt[a.id]||0)-(cnt[b.id]||0));
+  const fc=freeCourts();const k=Math.min(fc.length,Math.floor(ps.length/4));if(!k)return null;
+  const pt={},op={};allPoolRounds().concat(F.free).forEach(r=>r.courts.forEach(c=>{c.forEach(t=>{const q=pk(t[0],t[1]);pt[q]=(pt[q]||0)+1;});c[0].forEach(a=>c[1].forEach(b=>{const q=pk(a,b);op[q]=(op[q]||0)+1;}));}));
+  FX={};const ids=shuffle(ps.slice(0,4*k).map(p=>p.id));const courts=[];for(let i=0;i<k;i++)courts.push(bestSplit(ids.slice(4*i,4*i+4),pt,op,false,"rotate").o);
+  return {courts,rest:ps.slice(4*k).map(p=>p.id),cn:fc.slice(0,k)};}
+const finCourt=()=>"";
+document.addEventListener("click",async e=>{const id=e.target.id;
+  const fo=e.target.closest("[data-fo]");if(fo){const k=fo.dataset.fo,v=fo.dataset.v;if(k==="mode")st.ui.finMode=v;if(k==="pair")st.ui.finPair=v;if(k==="free")st.ui.finFree=v==="y";save();render();return;}
+  if(id==="finMake"){const B=finBuild();if(!B.F)return;const F=B.F;const tn=k=>F.t[k].map(nm).join(" · ");
+    const msg=F.ms.map((m,i)=>{const [a,b]=finTeamsOf(F,i);return a!=null&&b!=null?`${m.lbl}: ${tn(a)} vs ${tn(b)}`:m.src?`${m.lbl}: ${m.src.map(x=>finSrcTxt(F,x)).join(" vs ")}`:`${m.lbl}: 4강 ${m.lbl==="결승"?"이긴":"진"} 팀끼리`;}).join("\n")+(B.rest.length?`\n\n${F.mode==="all"||F.mode==="tour"?"쉬는 사람":"본선에 안 나가는 사람"}: ${B.rest.map(nm).join(", ")}`:"")+(B.left?`\n\n아직 점수를 안 넣은 조별 경기가 ${B.left}개 있어요. 지금 순위로 정해요.`:"");
+    if(!await ask(`${finTitle(F)}${F.mode==="semi"||F.mode==="tour"?"를":"을"} 만들까요?`,msg,"만들기"))return;
+    st.fin=F;save();render();
+    flash(F.mode==="tour"?"1라운드 경기를 시작하세요. 이긴 팀이 다음 라운드로 자동으로 올라가요.":F.mode==="semi"?"4강 두 경기를 동시에 시작하세요. 끝나면 결승과 3·4위전이 자동으로 짜여요.":F.mode==="all"?"모든 팀이 한 게임씩 해요. 결승(1·2위전) 결과로 우승이 정해져요.":F.noFree?"결승전을 만들었어요.":"결승전을 만들었어요. 나머지 분들은 '자유게임 짜기'로 함께 치세요.");return;}
+  if(id==="finDel"){if(!await ask("본선을 다시 정할까요?","본선 대진과 점수, 자유게임이 지워지고 다시 만들 수 있어요.","다시 정하기",true))return;st.fin=null;save();render();return;}
+  if(id==="freeMake"){const r=makeFree();if(!r){flash(freeCourts().length?"자유게임을 하려면 칠 수 있는 분이 4명 이상 있어야 해요.":"지금은 빈 코트가 없어요. 본선 경기가 끝나면 짤 수 있어요.");return;}st.fin.free.push(r);save();render();flash(`자유 ${st.fin.free.length}게임을 짰어요.`);return;}
+  if(id==="freeClr"){if(!await ask("자유게임을 지울까요?","짜 놓은 자유게임 목록이 지워져요.","지우기",true))return;st.fin.free=[];save();render();}});
 function renderAuto(){
   if(grouped()&&st.pool.cur<0){renderOverall();return;}
   const {w,l,pd}=stats();
@@ -1040,15 +1238,14 @@ function renderAuto(){
   $("restart").disabled=!allPoolRounds().length;
   const out=$("rounds-out");
   if(!st.rounds.length){out.innerHTML=poolTabs()+`<div class="empty">${grouped()?`${st.pool.cur+1}조 대진이 아직 없어요.<br>왼쪽 <b>대진 생성</b>을 누르면 ${st.pool.cur+1}조끼리 대진을 짜요.`:`아직 대진이 없습니다.<br>참가자를 4명 이상 추가하고 <b>대진 생성</b>을 누르세요.`}</div>`;return;}
-  const ranked=st.players.filter(p=>(w[p.id]+l[p.id])>0).sort((a,b)=>(rate(w[b.id],l[b.id])-rate(w[a.id],l[a.id]))||(w[b.id]-w[a.id])||(pd[b.id]-pd[a.id]));
+  const RR=rec(st.rounds);const ranked=RR.rank.map(pOf).filter(Boolean);
   const rs=repeatStats(st.rounds);
   const check=`<div class="chkLine"><span class="${rs.pr?"bad":"good"}">같은 파트너 반복 <b>${rs.pr}회</b></span><span class="${rs.or>st.rounds.length?"bad":"good"}">같은 상대 반복 <b>${rs.or}회</b></span><span>1인당 <b>${rs.mn===rs.mx?rs.mn:rs.mn+"~"+rs.mx}게임</b></span></div>`;
   const rp=st.replanAsk&&replanTargets().length?`<div class="replan"><span>참가자가 바뀌었어요. 남은 ${replanTargets().length}게임을 바뀐 인원으로 다시 짤 수 있어요.</span><button type="button" class="primary" id="replanBtn">남은 게임 다시 짜기</button><button type="button" class="link" id="replanNo">그대로 두기</button></div>`:"";
-  const table=poolTabs()+rp+check+`<div class="panel standings"><div class="sthd"><h2>${grouped()?(st.pool.cur+1)+"조 ":""}승률 순위</h2>${ranked.length?'<button type="button" class="copyBtn" data-copy="today">📤 결과 공유</button><button type="button" class="copyBtn" data-img="today" aria-label="이미지로 공유">🖼</button>':""}</div>
-    ${ranked.length?`<div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>게임</th><th>승</th><th>패</th><th>득실</th><th>승률</th></tr></thead><tbody>
-    ${ranked.map((p,i)=>{const r=rate(w[p.id],l[p.id]);return `<tr><td>${i+1}</td><td class="tn">${pbtn(p.id)}</td><td>${w[p.id]+l[p.id]}</td><td>${w[p.id]}</td><td>${l[p.id]}</td><td>${pd[p.id]>0?"+":""}${pd[p.id]}</td>
-      <td><div class="bar"><span style="width:${r}%"></span></div><b>${r}%</b></td></tr>`;}).join("")}</tbody></table></div>`
-    :`<p class="note">경기 점수를 입력하면 여기에 승률 순위가 나타납니다.</p>`}</div>`;
+  const table=poolTabs()+rp+check+`<div class="panel standings"><div class="sthd"><h2>${grouped()?(st.pool.cur+1)+"조 ":""}순위</h2>${rkSel()}${ranked.length?'<button type="button" class="copyBtn" data-copy="today">📤 결과 공유</button><button type="button" class="copyBtn" data-img="today" aria-label="이미지로 공유">🖼</button>':""}</div>
+    ${ranked.length?`<div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>게임</th><th>승</th><th>패</th><th>득실</th><th>${mainHead()}</th></tr></thead><tbody>
+    ${ranked.map((p,i)=>`<tr><td>${i+1}</td><td class="tn">${pbtn(p.id)}</td><td>${RR.w[p.id]+RR.l[p.id]}</td><td>${RR.w[p.id]}</td><td>${RR.l[p.id]}</td><td>${RR.pd[p.id]>0?"+":""}${RR.pd[p.id]}</td><td class="mc">${mainCol(RR,p.id)}</td></tr>`).join("")}</tbody></table></div>${rkNote(RR)}`
+    :`<p class="note">경기 점수를 입력하면 여기에 순위가 나타납니다.</p>`}</div>`;
   const cur=curAuto();
   out.innerHTML=table+`<p class="hint">이름을 누르면 그 사람의 게임 계획과 결과를 한눈에 볼 수 있어요. 끝난 게임은 접혀요.</p>`+st.rounds.map((r,ri)=>{
     const body=`<div class="courts">${r.courts.map((c,ci)=>{const sc=r.scores[ci];const f=done(sc);const win=f?(sc[0]>sc[1]?0:1):-1;const iss=scoreIssue(sc,target());
@@ -1078,7 +1275,7 @@ const lvb=id=>st.ui.lv?`<i class="lvb lv${LV[lvOf(id)]}">${LV[lvOf(id)]}</i>`:""
 function balanceTag(c){const d=Math.abs(c[0].reduce((a,i)=>a+lvOf(i),0)-c[1].reduce((a,i)=>a+lvOf(i),0));return d<=0?"⚖ 균형 좋음":d===1?"⚖ 균형 양호":"⚖ 실력 차 있음";}
 const isFxTeam=t=>fxPartner(t[0])===t[1];
 function team(t,ri,ci,ti,v,isWin){const sc=st.rounds[ri].scores[ci],pend=scWinner(sc)===ti&&!done(sc);
-  return `<div class="team ${isWin||pend?"win":""}"><span class="names">${isWin?'<i class="wb">승</i>':""}${isFxTeam(t)?'<i class="fxTag" title="고정 짝">🔗</i>':""}${t.map(id=>pbtn(id)+lvb(id)).join("<span class=dot>·</span>")}</span>
+  return `<div class="team ${isWin||pend?"win":""}"><span class="names">${isWin?'<i class="wb">승</i>':""}${isFxTeam(t)?'<i class="fxTag" title="고정 짝">🔗</i>':""}${t.map(id=>pbtn(id)+lvb(id)+(hpOf(st.rounds[ri]).includes(id)?'<i class="hpTag" title="도우미: 이 게임은 순위에 넣지 않아요">도우미</i>':"")).join("<span class=dot>·</span>")}</span>
   <span class="sctl">${scoreCtl(sc,ti,`data-k="auto" data-r="${ri}" data-c="${ci}"`,`${ri+1}게임 ${courtName(st.rounds[ri],ci)}`)}</span></div>`;}
 
 function renderTeams(){
@@ -1178,10 +1375,11 @@ function renderHist(){
       <div class="tbl"><table><thead><tr><th>순위</th><th>팀</th><th>승</th><th>패</th><th>득실</th></tr></thead><tbody>
       ${rank.map((id,i)=>`<tr><td>${i+1}</td><td class="tn"><b>${tnm(id)}</b></td><td>${r[id].w}</td><td>${r[id].l}</td><td>${r[id].pd>0?"+":""}${r[id].pd}</td></tr>`).join("")}</tbody></table></div>
       <ul class="games">${e.lg.matches.filter(m=>done(m.sc)).map(m=>`<li><span>${m.slot+1}게임 ${lCourt(e.lg.cn,m)}</span>${tnm(m.t[0])} <b>${m.sc[0]}:${m.sc[1]}</b> ${tnm(m.t[1])}</li>`).join("")}</ul>${btns(hi)}</details>`;}
-    const {w,l,pd,rank}=rec(e.rounds);const ppl=new Set(e.rounds.flatMap(r=>r.courts.flatMap(c=>c.flat())));
-    return `<details class="hd">${head(`개인전 · ${e.rounds.length}게임 · ${ppl.size}명`,rank.length?" · 1위 "+name(rank[0]):"")}
-      <div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>승</th><th>패</th><th>득실</th><th>승률</th></tr></thead><tbody>
-      ${rank.map((id,i)=>`<tr><td>${i+1}</td><td class="tn"><b>${name(id)}</b></td><td>${w[id]}</td><td>${l[id]}</td><td>${pd[id]>0?"+":""}${pd[id]}</td><td>${rate(w[id],l[id])}%</td></tr>`).join("")}</tbody></table></div>
+    const HR=rec(e.rounds);const {w,l,pd,rank}=HR;const ppl=new Set(e.rounds.flatMap(r=>r.courts.flatMap(c=>c.flat())));
+    const EF=finNorm(e.fin),ch=EF?finChamp(EF):null,fw=ch!=null?EF.t[ch].map(name).join("·"):"";
+    return `<details class="hd">${head(`개인전 · ${e.rounds.length}게임 · ${ppl.size}명`,fw?" · 🏆 "+fw:rank.length?" · 1위 "+name(rank[0]):"")}${EF?`<p class="note">${finLines(EF,name).map(x=>x.startsWith("→")?x:"🏆 "+x).join("<br>")}</p>`:""}
+      <div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>승</th><th>패</th><th>득실</th><th>${mainHead()}</th></tr></thead><tbody>
+      ${rank.map((id,i)=>`<tr><td>${i+1}</td><td class="tn"><b>${name(id)}</b></td><td>${w[id]}</td><td>${l[id]}</td><td>${pd[id]>0?"+":""}${pd[id]}</td><td class="mc">${mainCol(HR,id)}</td></tr>`).join("")}</tbody></table></div>
       <ul class="games">${e.rounds.map((r,ri)=>r.courts.map((c,ci)=>{const sc=r.scores[ci];if(!done(sc))return "";
         return `<li><span>${ri+1}게임 ${courtName(r,ci)}</span>${c[0].map(name).join("·")} <b>${sc[0]}:${sc[1]}</b> ${c[1].map(name).join("·")}</li>`;}).join("")).join("")}</ul>${btns(hi)}</details>`;}).join("");}
 
@@ -1253,7 +1451,7 @@ function renderEvent(){const out=$("league-out"),E=st.ev,R=E.rounds;
   const P=rec(R);const mvp=P.rank[0];const lead=pts.map((v,i)=>v===mx?i:-1).filter(i=>i>=0);
   const awards=`<div class="panel standings"><div class="sthd"><h2>시상 정리</h2><span class="tbBtns"><button type="button" class="drawBtn" id="drawBtn">🎁 경품 추첨</button>${fin?'<button type="button" class="copyBtn" data-copy="event">📤 결과 공유</button><button type="button" class="copyBtn" data-img="event" aria-label="이미지로 공유">🖼</button>':""}</span></div>
     <div class="awards"><div><small>${fin===tot?"우승 팀":"현재 1위"}</small><b>${fin?lead.map(i=>EVT[i].n).join(", ")+(lead.length>1?" (공동)":""):"–"}</b></div>
-    <div><small>MVP (개인 최다승)</small><b>${mvp?pbtn(mvp)+` ${P.w[mvp]}승 ${P.l[mvp]}패`:"–"}</b></div>
+    <div><small>MVP (개인 ${RKM[rkMode()].n} 1위)</small><b>${mvp?pbtn(mvp)+` ${P.w[mvp]}승 ${P.l[mvp]}패`:"–"}</b></div>
     <div><small>경품·행운상</small><b>${E.draws.length?E.draws.map(d=>`${esc(d.prize)} ${esc(d.name)}`).join(", "):"아직 추첨 전"}</b></div></div></div>`;
   const ranked=P.rank.slice(0,10);
   const indiv=ranked.length?`<details class="hd" data-fold="evr"${foldAttr("evr")}><summary><b>개인 순위 (상위 ${ranked.length}명)</b><span>승률 → 승수 → 득실</span></summary><div class="tbl"><table><thead><tr><th>순위</th><th>이름</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr></thead><tbody>
@@ -1303,7 +1501,7 @@ function showPlayer(pid){
   const rows=[];let next=null;
   RS.forEach((r,ri)=>{const ci=r.courts.findIndex(c=>c.flat().includes(pid));
     if(ci<0){rows.push({ri,rest:r.rest.includes(pid)});return;}
-    const c=r.courts[ci],ti=c[0].includes(pid)?0:1,row={ri,court:courtName(r,ci),partner:c[ti].find(x=>x!==pid),opp:c[1-ti],sc:r.scores[ci],ti,fin:done(r.scores[ci])};
+    const c=r.courts[ci],ti=c[0].includes(pid)?0:1,row={hp:hpOf(r).includes(pid),ri,court:courtName(r,ci),partner:c[ti].find(x=>x!==pid),opp:c[1-ti],sc:r.scores[ci],ti,fin:done(r.scores[ci])};
     if(!row.fin&&!next)next=row;rows.push(row);});
   const rt=rate(w[pid],l[pid]);
   openSheet(sheetTop(esc(p.name),[st.ui.lv?`실력 ${LV[p.lv]}조`:"",p.g?(p.g==="m"?"남":"여"):"",p.on?"오늘 참석":"오늘 불참",fxPartner(pid)?`🔗 고정 짝 ${esc(nm(fxPartner(pid)))}`:""].filter(Boolean).join(" · "))+kpis([[g[pid],"참여 게임"],[`${w[pid]}승 ${l[pid]}패`,"전적"],[rt==null?"–":rt+"%","승률"],[(pd[pid]>0?"+":"")+pd[pid],"득실"]])+
@@ -1311,7 +1509,7 @@ function showPlayer(pid){
       :rows.length?`<p class="note" style="margin:0 0 14px">${g[pid]?"짜인 게임을 모두 마쳤어요.":"아직 배정된 게임이 없어요."}</p>`:"")+
     (rows.length?`<h3 class="tlh">게임 계획과 결과</h3><ul class="tl">${rows.map(x=>{
       if(!x.court)return `<li class="restRow"><span class="rd">${x.ri+1}게임</span><span class="who">${x.rest?"휴식":"명단에 없던 게임"}</span><span class="res p">–</span></li>`;
-      return `<li class="${x===next?"cur":""}"><span class="rd">${x.ri+1}게임</span><span class="who">${x.court} · 파트너 ${esc(nm(x.partner))}<em>상대 ${x.opp.map(y=>esc(nm(y))).join(", ")}</em></span>${resCell(x.sc[x.ti],x.sc[1-x.ti],x.fin,x===next)}</li>`;}).join("")}</ul>`
+      return `<li class="${x===next?"cur":""}"><span class="rd">${x.ri+1}게임</span><span class="who">${x.hp?"🤝 도우미 · ":""}${x.court} · 파트너 ${esc(nm(x.partner))}<em>상대 ${x.opp.map(y=>esc(nm(y))).join(", ")}</em></span>${resCell(x.sc[x.ti],x.sc[1-x.ti],x.fin,x===next)}</li>`;}).join("")}</ul>`
       :`<p class="note">대진을 생성하면 여기에 게임 계획이 표시됩니다.</p>`));}
 function teamRows(tid){const rows=[];
   const fromList=(matches,cn,lbl)=>matches.filter(m=>m.t.includes(tid)).sort((a,b)=>a.slot-b.slot).forEach(m=>{const ti=m.t.indexOf(tid);rows.push({label:lbl(m),where:lCourt(cn,m),my:m.sc[ti],op:m.sc[1-ti],opp:m.t[1-ti],fin:done(m.sc),can:true});});
@@ -1485,12 +1683,13 @@ function scheduleText(){const T=target(),f=fmt(),d=fmtDate(today());const L=[];
   const tl=t=>`${tIdx(t.id)}팀 ${tName(t)}`;
   if(isEvent())return evScheduleText();
   if(f==="auto"&&grouped()&&st.pool.cur<0){syncPool();L.push(`🏸 ${d} 배드민턴 개인전 대진표 (${T}점)`,`${st.pool.n}개 조 · 참석 ${st.players.filter(p=>p.on).length}명`);
+    if(st.fin){L.push("",`[🏆 ${finTitle(st.fin)}]`,...finLines(st.fin,nm,true));st.fin.free.forEach((r,ri)=>{L.push("",`[자유 ${ri+1}게임]`);r.courts.forEach((c,ci)=>L.push(`${r.cn[ci]!=null?r.cn[ci]+"번 코트":"코트"}: ${c[0].map(nm).join("·")} vs ${c[1].map(nm).join("·")}`));if(r.rest.length)L.push(`휴식: ${r.rest.map(nm).join(", ")}`);});}
     st.pool.pr.forEach((rs,pi)=>{L.push("",`■■ ${pi+1}조 (${st.players.filter(p=>p.on&&p.pool===pi).map(p=>p.name).join(", ")})`);
-      rs.forEach((r,ri)=>{L.push("",`[${pi+1}조 ${ri+1}게임]`);r.courts.forEach((c,ci)=>L.push(`${courtName(r,ci)}: ${c[0].map(nm).join("·")} vs ${c[1].map(nm).join("·")}${done(r.scores[ci])?` (${r.scores[ci][0]}:${r.scores[ci][1]})`:""}`));if(r.rest.length)L.push(`휴식: ${r.rest.map(nm).join(", ")}`);});});
+      rs.forEach((r,ri)=>{L.push("",`[${pi+1}조 ${ri+1}게임]`);r.courts.forEach((c,ci)=>L.push(`${courtName(r,ci)}: ${c[0].map(nmH(r)).join("·")} vs ${c[1].map(nmH(r)).join("·")}${done(r.scores[ci])?` (${r.scores[ci][0]}:${r.scores[ci][1]})`:""}`));if(r.rest.length)L.push(`휴식: ${r.rest.map(nm).join(", ")}`);});});
     return L.concat(FOOT).join("\n");}
   if(f==="auto"){L.push(`🏸 ${d} 배드민턴 개인전${grouped()?" "+(st.pool.cur+1)+"조":""} 대진표 (${T}점)`,`${st.rounds.length}게임 · 참석 ${activeP().length}명`);
     const multi=st.rounds.some(x=>batchOf(x)>0);
-    st.rounds.forEach((r,ri)=>{if(multi&&(ri===0||batchOf(st.rounds[ri-1])!==batchOf(r)))L.push("",`■ ${batchOf(r)+1}회차`);L.push("",`[${ri+1}게임]`);r.courts.forEach((c,ci)=>{const sc=r.scores[ci];L.push(`${courtName(r,ci)}: ${c[0].map(nm).join("·")} vs ${c[1].map(nm).join("·")}${done(sc)?` (${sc[0]}:${sc[1]})`:""}`);});
+    st.rounds.forEach((r,ri)=>{if(multi&&(ri===0||batchOf(st.rounds[ri-1])!==batchOf(r)))L.push("",`■ ${batchOf(r)+1}회차`);L.push("",`[${ri+1}게임]`);r.courts.forEach((c,ci)=>{const sc=r.scores[ci];L.push(`${courtName(r,ci)}: ${c[0].map(nmH(r)).join("·")} vs ${c[1].map(nmH(r)).join("·")}${done(sc)?` (${sc[0]}:${sc[1]})`:""}`);});
       if(r.rest.length)L.push(`휴식: ${r.rest.map(nm).join(", ")}`);});}
   else{const ts=validTeams();
     if(f==="league"){L.push(`🏸 ${d} 배드민턴 리그전 대진표 (${T}점)`,`${ts.length}팀 · ${st.lg.matches.length}경기`,"","[팀]",...ts.map(tl));
@@ -1576,7 +1775,7 @@ function textFor(k,copyText){
     else if(k==="tour")copyText(tourText(st.tn,st.lg.teams,nm,st.tn.day||today(),target()));
     else if(k==="group")copyText(groupText(st.gp,st.gk,st.lg.teams,nm,st.gp.day||today(),target()));
     else{const h=st.history[+k],name=id=>h.names[id]||"?",tg=h.target||21;
-      copyText(h.kind==="event"?eventText(h.ev,name,h.date,tg):h.kind==="tour"?tourText(h.tn,h.teams,name,h.date,tg):h.kind==="group"?groupText(h.gp,h.gk,h.teams,name,h.date,tg):h.kind==="league"?leagueText(h.lg.teams,h.lg.matches,h.lg.cn,name,h.date,tg):resultText(h.rounds,name,h.date,h.target));}}
+      copyText(h.kind==="event"?eventText(h.ev,name,h.date,tg):h.kind==="tour"?tourText(h.tn,h.teams,name,h.date,tg):h.kind==="group"?groupText(h.gp,h.gk,h.teams,name,h.date,tg):h.kind==="league"?leagueText(h.lg.teams,h.lg.matches,h.lg.cn,name,h.date,tg):resultText(h.rounds,name,h.date,h.target,"",h.fin));}}
 document.addEventListener("click",async e=>{
   const dh=e.target.closest("[data-delh]");
   if(dh){const h=st.history[+dh.dataset.delh];if(await ask("이 기록을 삭제할까요?",`${fmtDate(h.date)} 기록이 완전히 지워져요.`,"삭제",true)){st.history.splice(+dh.dataset.delh,1);save();render();flash("기록을 삭제했어요.");}return;}
@@ -1611,12 +1810,16 @@ $("list").addEventListener("click",async e=>{const id=e.target.dataset.del;if(!i
   st.fx=(st.fx||[]).filter(x=>!x.includes(id));st.players=st.players.filter(x=>x.id!==id);save();render();});
 $("gen").onclick=async()=>{
   if(st.rounds.length&&!await ask("처음부터 다시 짤까요?",`${grouped()?(st.pool.cur+1)+"조에 ":""}이미 짜인 ${st.rounds.length}게임이 모두 지워지고 처음부터 새로 짭니다.\n이어서 짜려면 취소 후 '＋ 다음 회차 짜기'를 누르세요.\n점수를 넣은 기록은 '지난 기록'에 보관돼요.`,"새로 짜기",true))return;
-  const kept=grouped()?false:archiveToday2();st.rounds.splice(0);activeP().forEach(p=>p.base=0);st.replanAsk=false;addRounds(Math.max(1,+$("rounds").value||1),0);if(kept)flash("이전 게임 기록은 '지난 기록'에 보관하고 새로 짰어요.");};
+  const kept=grouped()?false:archiveToday2();st.rounds.splice(0);activeP().forEach(p=>p.base=0);st.replanAsk=false;
+  if(perMode()){const pl=perPlan(Math.max(1,+$("rounds").value||1));if(!pl){flash("참석자가 4명 이상이어야 대진을 만들 수 있어요.");save();render();return;}
+    if(!pl.ok){flash(`${pl.N}명이 1인당 ${pl.k}게임씩 똑같이 치게는 짤 수 없어요.${pl.alt.length?` ${pl.alt.join("게임이나 ")}게임으로 해 보세요.`:""}`);save();render();return;}
+    addRounds(pl.list.length,0,pl.list,pl);}else addRounds(Math.max(1,+$("rounds").value||1),0);if(kept)flash("이전 게임 기록은 '지난 기록'에 보관하고 새로 짰어요.");};
 const archiveToday2=archiveAuto;
-$("rounds").addEventListener("input",()=>{if(st.rounds.length)$("nextB").textContent=`＋ 다음 회차 짜기 (${Math.max(1,+$("rounds").value||1)}게임)`;});
+$("rounds").addEventListener("input",()=>{const v=Math.max(1,+$("rounds").value||1);if(st.rounds.length)$("nextB").textContent=perMode()?`＋ 다음 회차 짜기 (1인당 ${v}게임)`:`＋ 다음 회차 짜기 (${v}게임)`;});
 $("nextB").onclick=async()=>{const left=st.rounds.reduce((a,r)=>a+r.scores.filter(sc=>!done(sc)).length,0);const N=Math.max(1,+$("rounds").value||1),nb=curBatch()+1;
-  if(!await ask(`${nb+1}회차를 짤까요?`,`${N}게임을 새로 짜서 이어 붙여요. 지금까지 덜 뛴 사람이 먼저 들어가고, 같은 파트너·상대는 피해요.`+(left?`\n\n아직 점수를 안 넣은 경기가 ${left}개 있어요.`:""),"짜기"))return;
-  st.replanAsk=false;if(addRounds(N,nb)){const el=document.getElementById("batch"+nb);if(el&&el.scrollIntoView)try{el.scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}};
+  const pl=perMode()?perPlan(N):null;if(pl&&!pl.ok){flash(`${pl.N}명이 1인당 ${pl.k}게임씩 똑같이 치게는 짤 수 없어요.${pl.alt.length?` ${pl.alt.join("게임이나 ")}게임으로 해 보세요.`:""}`);return;}
+  if(!await ask(`${nb+1}회차를 짤까요?`,(pl?`1인당 ${N}게임씩 더, 총 ${pl.list.length}게임을 짜서 이어 붙여요.${pl.helpers?` (도우미 ${pl.helpers}명)`:""}`:`${N}게임을 새로 짜서 이어 붙여요.`)+` 지금까지 덜 뛴 사람이 먼저 들어가고, 같은 파트너·상대는 피해요.`+(left?`\n\n아직 점수를 안 넣은 경기가 ${left}개 있어요.`:""),"짜기"))return;
+  st.replanAsk=false;if(pl?addRounds(pl.list.length,nb,pl.list,pl):addRounds(N,nb)){const el=document.getElementById("batch"+nb);if(el&&el.scrollIntoView)try{el.scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}};
 $("more").onclick=async()=>{const left=st.rounds.reduce((a,r)=>a+r.scores.filter(sc=>!done(sc)).length,0);
   if(left&&!await ask("다음 게임을 추가할까요?",`아직 점수를 안 넣은 경기가 ${left}개 있어요.\n그래도 다음 게임을 추가할까요?`,"추가하기"))return;
   addRounds(1);};
@@ -1633,6 +1836,7 @@ $("wipe").onclick=async()=>{if(!await ask("명단을 모두 삭제할까요?","�
 function scRef(d){const k=d.k;
   if(k==="ev")return {k,sc:st.ev.rounds[+d.r].scores[+d.c],key:`e-${d.r}-${d.c}`};
   if(k==="auto")return {k,sc:st.rounds[+d.r].scores[+d.c],key:`a-${d.r}-${d.c}`};
+  if(k==="fin")return {k,sc:st.fin.ms[+d.m].sc,key:"fin-"+d.m,m:+d.m};
   if(k==="lg")return {k,sc:st.lg.matches[+d.m].sc,key:`l-${d.m}`};
   if(k==="gp")return {k,sc:st.gp.matches[+d.m].sc,key:`g-${d.m}`};
   const tn=k==="tn"?st.tn:st.gk;return {k,tn,r:+d.tr,i:+d.tm,sc:tn.rounds[+d.tr][+d.tm].sc,key:`${k}-${d.tr}-${d.tm}`};}
@@ -1640,10 +1844,17 @@ function progress(k){if(k==="auto")return curAuto();if(k==="ev")return curEv();i
 async function commitSc(ref,nv){
   if(ref.tn){const copy=JSON.parse(JSON.stringify(ref.tn));copy.rounds[ref.r][ref.i].sc=nv.slice();const cl=tourSync(copy);
     if(cl&&!await ask("이후 경기 결과가 지워져요",`이 결과로 바꾸면 승자가 바뀌어서 다음 라운드 결과 ${cl}개가 지워져요.\n바꿀까요?`,"바꾸기",true)){render();return false;}}
+  if(ref.k==="fin"){const cp=JSON.parse(JSON.stringify(st.fin));cp.ms[ref.m].sc=nv.slice();const hit=[];
+    for(let it=0;it<6;it++){let ch=false;cp.ms.forEach((m,i)=>{if(i===ref.m||!m.sc.some(v=>v!=null))return;if(finTeamsOf(cp,i).join()!==finTeamsOf(st.fin,i).join()){m.sc=[null,null];hit.push(i);ch=true;}});if(!ch)break;}
+    if(hit.length){if(!await ask("뒤 경기 결과가 지워져요",`이 결과로 바꾸면 ${[...new Set(hit)].map(i=>st.fin.ms[i].lbl).join("·")}에 나가는 팀이 바뀌어서 그 점수가 지워져요.\n바꿀까요?`,"바꾸기",true)){render();return false;}[...new Set(hit)].forEach(i=>st.fin.ms[i].sc=[null,null]);}}
   const before=progress(ref.k);ref.sc[0]=nv[0];ref.sc[1]=nv[1];if(ref.tn)tourSync(ref.tn);
   if(ref.k==="gp"&&st.gk)flash("본선 대진은 이미 만들어져 있어서 조 순위가 바뀌어도 자동으로 바뀌지 않아요.");
   save();render();
   if(!done(nv))return true;
+  if(ref.k==="fin"){const F=st.fin,ch=finChamp(F);if(ch!=null)flash(`🏆 우승 ${F.t[ch].map(nm).join(" · ")}! 결과 공유로 단톡방에 알려 보세요.`);
+    else if(F.mode==="tour"){const nx=F.ms.findIndex((m,i)=>!done(m.sc)&&finTeamsOf(F,i).every(x=>x!=null));flash(`${Math.max(...nv)}:${Math.min(...nv)} 기록했어요.${nx>=0?` 다음: ${F.ms[nx].lbl}`:""}`);}
+    else if(F.mode==="semi"&&ref.m<2&&finTeamsOf(F,2).every(x=>x!=null))flash(`4강이 끝났어요. 결승: ${F.t[finTeamsOf(F,2)[0]].map(nm).join("·")} vs ${F.t[finTeamsOf(F,2)[1]].map(nm).join("·")} · 3·4위전도 짜였어요.`);
+    else flash(`${Math.max(...nv)}:${Math.min(...nv)} 기록했어요.`);return true;}
   const after=progress(ref.k);
   if(ref.tn){const pd=podium(ref.tn);if(pd.champ&&done(ref.tn.rounds[ref.tn.rounds.length-1][0].sc))flash(`🏆 ${tIdx(pd.champ)}팀 ${tName(tOf(pd.champ))} 우승!`);else flash(`${nv[0]}:${nv[1]} 기록했어요. 이긴 팀이 다음 칸으로 올라가요.`);return true;}
   if(after>=0&&after!==before){flash(`${nv[0]>nv[1]?nv[0]+":"+nv[1]:nv[1]+":"+nv[0]} 기록했어요. ${after+1}게임으로 넘어가요.`);scrollNow();}
@@ -1655,7 +1866,7 @@ async function onScoreClick(e){const b=e.target.closest("[data-act]");if(!b||b.t
     if(await commitSc(ref,nv)){const sel=document.querySelector(`[data-key="${ref.key}"] select.lose`)||[...document.querySelectorAll("select.lose")].find(x=>scRefKey(x.dataset)===ref.key);
       if(sel){sel.focus();try{sel.showPicker&&sel.showPicker();}catch(_){}flash("진 팀 점수를 골라 주세요. 위쪽은 듀스 점수예요.");}}}
   if(b.dataset.act==="clear")await commitSc(ref,[null,null]);}
-const scRefKey=d=>d.k==="ev"?`e-${d.r}-${d.c}`:d.k==="auto"?`a-${d.r}-${d.c}`:d.k==="lg"?`l-${d.m}`:d.k==="gp"?`g-${d.m}`:`${d.k}-${d.tr}-${d.tm}`;
+const scRefKey=d=>d.k==="fin"?"fin-"+d.m:d.k==="ev"?`e-${d.r}-${d.c}`:d.k==="auto"?`a-${d.r}-${d.c}`:d.k==="lg"?`l-${d.m}`:d.k==="gp"?`g-${d.m}`:`${d.k}-${d.tr}-${d.tm}`;
 async function onScoreChange(e){const s=e.target;if(!s.matches("select.lose"))return;const ref=scRef(s.dataset);const T=target();const ti=+s.dataset.t;
   if(s.value===""){return;}const l=+s.value;const nv=[null,null];nv[ti]=l;nv[1-ti]=winScore(l,T);await commitSc(ref,nv);}
 function scrollNow(){const n=document.querySelector(".round.now");if(n&&n.scrollIntoView)try{n.scrollIntoView({behavior:"smooth",block:"start"});}catch(e){}}
@@ -1721,7 +1932,13 @@ document.addEventListener("change",e=>{const t=e.target;if(t.dataset&&t.dataset.
 document.addEventListener("click",e=>{const a=e.target.closest("[data-age]");if(!a)return;const p=pOf(a.dataset.age);const order=[null,2,3,4,5,6];p.age=order[(order.indexOf(p.age||null)+1)%order.length];save();render();});
 $("lvBtn").onclick=()=>{st.ui.lv=!st.ui.lv;save();render();flash(st.ui.lv?"대진표에 실력 조를 색 배지로 보여줘요. 다른 사람에게 보여줄 때는 숨겨 주세요.":"실력 조를 숨겼어요. 코트마다 팀 균형만 표시돼요.");};
 $("mode").addEventListener("change",()=>{st.cfg.mode=$("mode").value;save();render();});
-$("rounds").addEventListener("input",()=>{st.cfg.games=Math.max(1,+$("rounds").value||1);save();renderPreview();});
+$("rounds").addEventListener("input",()=>{const v=Math.max(1,+$("rounds").value||1);if(perMode())st.cfg.pk=v;else st.cfg.games=v;save();renderPreview();});
+function syncPer(){const pm=perMode();const lb=$("roundsLbl");if(lb)lb.innerHTML=pm?`1인당 게임 수<br><small style="font-size:12px">모두 같은 수만큼 치게 짜요</small>`:`한 회차 게임 수<br><small style="font-size:12px">대진을 한 번 짤 때 만드는 게임 수</small>`;
+  const want=pm?(st.cfg.pk||4):(st.cfg.games||4);if(document.activeElement!==$("rounds")&&+$("rounds").value!==want)$("rounds").value=want;
+  const sg=$("perSeg");if(sg){sg.hidden=curMode()==="mixed";sg.querySelectorAll("button").forEach(b=>b.classList.toggle("on",(b.dataset.per==="1")===pm));}}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-per]");if(b){st.cfg.per=b.dataset.per==="1";save();render();return;}
+  const hb=e.target.closest("[data-help]");if(hb){st.cfg.help=hb.dataset.help==="1";save();render();flash(st.cfg.help?"도우미를 넣어 모두 같은 게임 수로 짜요.":"도우미 없이 짜요.");return;}
+  const k=e.target.closest("[data-pk]");if(k){st.cfg.pk=+k.dataset.pk;$("rounds").value=k.dataset.pk;save();render();flash(`1인당 ${k.dataset.pk}게임으로 맞췄어요.`);}});
 $("courts").addEventListener("input",()=>renderPreview());
 document.addEventListener("click",e=>{const f=e.target.closest("[data-fit]");if(f){$("rounds").value=f.dataset.fit;st.cfg.games=+f.dataset.fit;save();render();flash(`${f.dataset.fit}게임으로 맞췄어요. 모두 같은 수의 게임을 쳐요.`);}
   if(e.target.id==="replanBtn")replan();if(e.target.id==="replanNo"){st.replanAsk=false;save();render();}});
