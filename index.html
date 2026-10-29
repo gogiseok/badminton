@@ -342,6 +342,12 @@ select.lose option{color:#1b2a24;background:#fff}
 .feeSet{gap:10px;align-items:center;flex-wrap:wrap}
 .feeSet label{display:flex;align-items:center;gap:6px;font-size:14px}
 .feeSet input{width:110px;padding:6px}
+.ver{flex-basis:100%;margin:0;font-size:12px;color:var(--muted);text-align:right}
+.updBar{position:fixed;left:16px;right:16px;bottom:16px;margin:0 auto;max-width:420px;z-index:15;display:flex;align-items:center;gap:8px;background:var(--court);color:#fff;border-radius:999px;padding:8px 8px 8px 16px;box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:14px}
+.updBar[hidden]{display:none}
+.updBar span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.updBar button{background:var(--shuttle);border-color:var(--shuttle);color:#2a2100;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.updBar .x{background:transparent;border:0;color:#fff;padding:4px 8px}
 .instBtn{background:var(--court);border-color:var(--court);color:var(--accentFg);font-weight:700}
 .imgBtn{background:var(--panel);border-color:var(--shuttle);color:var(--fg)}
 .feeK .kpi b{font-size:17px;white-space:nowrap}
@@ -562,7 +568,9 @@ td.mc small.sub{display:block;font-size:11px;color:var(--muted)}
       불편한 점이나 추가했으면 하는 기능을 개선 요청으로 남겨 주시거나 <strong>고기석</strong>에게 편하게 말씀해 주세요.
     </div>
     <a class="req" href="https://docs.google.com/forms/d/e/1FAIpQLSc9tJwb3nrgX7WWge4g_tUd3LeuteIv8zEMUxAoSAXLw84GgA/viewform" target="_blank" rel="noopener">개선 요청하기 →</a>
+    <p class="ver" id="verTxt"></p>
   </footer>
+  <div class="updBar" id="updBar" hidden><span>✨ 새 버전이 있어요</span><button type="button" id="updGo">지금 새로고침</button><button type="button" class="x" id="updNo" aria-label="닫기">✕</button></div>
 </div>
 
 <div class="ov" id="ov" hidden>
@@ -1595,6 +1603,16 @@ document.addEventListener("click",async e=>{const t=e.target;if($("ov").hidden)r
 document.addEventListener("change",e=>{const t=e.target;
   if(t.id==="feeMon"){feeM=t.value;showFee();}
   if(t.id==="feeMonthly"){st.fee.monthly=Math.max(0,parseInt(t.value,10)||0);save();showFee();}});
+
+/* ---------- 버전 표시 · 새 버전 알림 ---------- */
+const APP_VER="35",APP_DATE="2026.10.29";
+$("verTxt").textContent=`버전 ${APP_VER} · ${APP_DATE} 업데이트`;
+async function checkUpdate(){if(!/github\.io$/.test(location.hostname))return;
+  try{const r=await fetch(location.pathname.replace(/[^/]*$/,"")+"index.html?v="+Date.now(),{cache:"no-store"});if(!r.ok)return;const t=await r.text();
+    const m=t.match(/APP_VER="(\d+)"/);if(m&&+m[1]>+APP_VER){$("updBar").hidden=false;}}catch(e){}}
+$("updGo").onclick=()=>{try{navigator.serviceWorker&&navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.update()));}catch(e){}location.reload();};
+$("updNo").onclick=()=>{$("updBar").hidden=true;};
+setTimeout(checkUpdate,1500);document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate();});
 
 /* ---------- 홈 화면에 추가 ---------- */
 let instEvt=null;
